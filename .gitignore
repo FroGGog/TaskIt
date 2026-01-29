@@ -1,0 +1,56 @@
+# Build directories
+/build/
+/_build/
+/out/
+/bin/
+/lib/
+
+# IDE and editor files
+.vscode/
+.vs/
+*.suo
+*.user
+*.vcxproj*
+*.filters
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+CTestTestfile.cmake
+_Deps/
+/install/
+
+# Compile commands & tools
+compile_commands.json
+
+# Clang-Tidy
+.clang-tidy
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+
+# Executables (optional, but safe to ignore)
+*.exe
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+
+# PowerShell scripts output (if any)
+*.ps1
+*.xml
+
+# Debug artifacts (Windows)
+Debug/
+Release/
+x64/
