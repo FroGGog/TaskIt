@@ -5,6 +5,8 @@
 
 enum class TaskStatus: std::uint8_t {TO_DO, IN_PROGRESS, DONE};
 
+std::string statusToString(TaskStatus status);
+
 class Task
 {
 public:

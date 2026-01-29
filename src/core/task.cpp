@@ -1,5 +1,19 @@
 #include "task.h"
 
+std::string statusToString(TaskStatus status)
+{
+    switch (status)
+    {
+    case TaskStatus::TO_DO:
+        return "To Do";
+    case TaskStatus::IN_PROGRESS:
+        return "In Progress";
+    case TaskStatus::DONE:
+        return "Done";
+    default:        
+        break;
+    }
+}
 
 Task::Task(std::string task_title, std::string description)
     : m_task_title(std::move(task_title)),

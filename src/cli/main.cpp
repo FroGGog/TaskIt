@@ -1,15 +1,19 @@
 #include <iostream>
 
 #include "task_manager.h"
+#include "parse_input.h"
 
 int main() // NOLINT(bugprone-exception-escape)
 {
     try {
-        TaskManager test_manager;
-        test_manager.addTask("Test", "description");
-        std::cout << test_manager.getTaskById(1).getTitle() << '\n';
-
-        std::cout << test_manager.getAllTasks().size() << '\n';
+        TaskManager manager;
+        std::string user_info;
+        while(user_info != "quit")
+        {            
+            std::cout << "TaskIt>";
+            std::getline(std::cin, user_info);
+            runCommand(manager, user_info);
+        }
         return 0;
     }
     catch (const std::bad_alloc&) {

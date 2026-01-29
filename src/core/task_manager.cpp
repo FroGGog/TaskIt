@@ -15,3 +15,11 @@ const std::unordered_map<int, Task>& TaskManager::getAllTasks() const
 {
     return m_task_storage;
 }
+
+void TaskManager::printAllTasks() const
+{
+    for(const auto& task : m_task_storage)
+    {
+        std::cout << task.second.getTitle() << ' ' << task.second.getDescription() << " status: " << statusToString(task.second.getStatus()) << '\n';
+    }
+}

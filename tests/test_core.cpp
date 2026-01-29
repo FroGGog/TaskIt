@@ -27,7 +27,6 @@ TEST(TaskManager, GetTaskCount)
     manager.addTask("Test3", "Description");
 
     const auto& task_count = manager.getAllTasks().size();
-    const auto& tasks = manager.getAllTasks();
     EXPECT_EQ(task_count, 3);
 }
 
