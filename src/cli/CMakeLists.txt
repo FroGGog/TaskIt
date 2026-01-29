@@ -1,4 +1,4 @@
-add_executable(TaskIt main.cpp parse_input.cpp)
+add_executable(TaskIt main.cpp)
 
 target_compile_features(TaskIt PRIVATE cxx_std_17)
 

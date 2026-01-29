@@ -3,6 +3,8 @@ add_library(core STATIC
     task.h
     task_manager.cpp
     task_manager.h
+    parse_input.cpp
+    parse_input.h
 )
 
 target_include_directories(core PUBLIC
