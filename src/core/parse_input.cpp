@@ -16,7 +16,7 @@ void runCommand(TaskManager &manager, std::string_view text_line)
 
     if(fullCommand.empty())
     {
-        std::cerr << "\nTaskIt> Unknow command (type help to get more info)\n";
+        std::cerr << "\ntaskit> Unknow command (type help to get more info)\n";
         return;
     }
 
@@ -24,7 +24,7 @@ void runCommand(TaskManager &manager, std::string_view text_line)
     {
         if(fullCommand.size() != 3)
         {
-            std::cerr << "Usage: addtask \"title\" \"description\"\n";
+            std::cerr << "taskit> Usage: addtask \"title\" \"description\"\n";
             return;
         }
         else
@@ -42,7 +42,7 @@ void runCommand(TaskManager &manager, std::string_view text_line)
     }
     else
     {
-        std::cerr << "TaskIt> Unknow command (type help to get more info)\n";
+        std::cerr << "taskit> Unknow command (type help to get more info)\n";
     }
 }
 

@@ -10,7 +10,7 @@ int main() // NOLINT(bugprone-exception-escape)
         std::string user_info;
         while(user_info != "quit")
         {            
-            std::cout << "TaskIt>";
+            std::cout << "taskit>";
             std::getline(std::cin, user_info);
             runCommand(manager, user_info);
         }
