@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 
 #include "task.h"
 
@@ -9,13 +9,13 @@ class TaskManager
 public:
     TaskManager() = default;
 
-    void addTask(const Task& add_task);
+    void addTask(const std::string& title, const std::string& description);
 
     [[nodiscard]] Task& getTaskById(int task_id);
 
 private:
     
-    std::vector<Task> m_task_storage;
+    std::unordered_map<int, Task> m_task_storage;
 
 };
 
