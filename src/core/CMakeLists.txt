@@ -1,6 +1,8 @@
 add_library(core STATIC
     task.cpp
     task.h
+    task_manager.cpp
+    task_manager.h
 )
 
 target_include_directories(core PUBLIC

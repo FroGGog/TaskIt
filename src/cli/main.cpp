@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "task.h"
+#include "task_manager.h"
 
 int main() {
-    std::cout << "Hello, C++!" << std::endl;
+
     return 0;
 }
