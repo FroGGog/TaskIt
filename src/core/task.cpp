@@ -1,11 +1,9 @@
 #include "task.h"
 
-int Task::m_global_id = 0;
 
 Task::Task(std::string task_title, std::string description)
-    :m_id(++m_global_id),
-    m_task_title(std::move(task_title)),
-    m_description(std::move(description))
+    : m_task_title(std::move(task_title)),
+      m_description(std::move(description))
     {}
 
 // setters
@@ -38,9 +36,4 @@ std::string_view Task::getDescription() const
 TaskStatus Task::getStatus() const
 {
     return m_task_status;
-}
-
-int Task::getId() const
-{
-    return m_id;
 }

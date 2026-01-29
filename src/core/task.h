@@ -19,12 +19,9 @@ public:
     [[nodiscard]] std::string_view getTitle() const;
     [[nodiscard]] std::string_view getDescription() const;
     [[nodiscard]] TaskStatus getStatus() const;
-    [[nodiscard]] int getId() const;
 
 private:
 
-    static int m_global_id;
-    int m_id;
     std::string m_task_title;
     std::string m_description;
     TaskStatus m_task_status = TaskStatus::TO_DO;

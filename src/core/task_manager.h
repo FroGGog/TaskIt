@@ -17,5 +17,7 @@ private:
     
     std::unordered_map<int, Task> m_task_storage;
 
+    int m_next_task_id = 1;
+
 };
 
