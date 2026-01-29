@@ -10,3 +10,8 @@ Task &TaskManager::getTaskById(int task_id)
 {
     return m_task_storage.at(task_id);
 }
+
+const std::unordered_map<int, Task>& TaskManager::getAllTasks() const
+{
+    return m_task_storage;
+}

@@ -8,6 +8,8 @@ int main() // NOLINT(bugprone-exception-escape)
         TaskManager test_manager;
         test_manager.addTask("Test", "description");
         std::cout << test_manager.getTaskById(1).getTitle() << '\n';
+
+        std::cout << test_manager.getAllTasks().size() << '\n';
         return 0;
     }
     catch (const std::bad_alloc&) {

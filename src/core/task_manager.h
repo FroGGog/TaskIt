@@ -12,6 +12,7 @@ public:
     void addTask(const std::string& title, const std::string& description);
 
     [[nodiscard]] Task& getTaskById(int task_id);
+    [[nodiscard]] const std::unordered_map<int, Task>&  getAllTasks() const;
 
 private:
     
