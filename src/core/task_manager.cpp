@@ -20,6 +20,20 @@ void TaskManager::printAllTasks() const
 {
     for(const auto& task : m_task_storage)
     {
-        std::cout << task.second.getTitle() << ' ' << task.second.getDescription() << " status: " << statusToString(task.second.getStatus()) << '\n';
+        std::cout << "ID: " << task.first << " | Title: " << task.second.getTitle() << " | Description: " << task.second.getDescription() 
+                  << " | Status: " << statusToString(task.second.getStatus()) << '\n';
+    }
+}
+
+void TaskManager::printTaskById(int task_id) const
+{
+    try
+    {
+        const auto& task = m_task_storage.at(task_id);
+        std::cout << "ID: " <<  task_id << " | Title: " << task.getTitle() << " | Description: " << task.getDescription() << "\n";
+    }
+    catch(const std::out_of_range& e)
+    {
+        std::cerr << "taskit> No task with such ID\n";
     }
 }

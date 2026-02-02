@@ -17,6 +17,7 @@ public:
     [[nodiscard]] const std::unordered_map<int, Task>&  getAllTasks() const;
 
     void printAllTasks() const;
+    void printTaskById(int task_id) const;
 
 private:
     

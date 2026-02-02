@@ -37,6 +37,7 @@ compile_commands.json
 *.tmp
 *.swp
 *~
+*.txt
 
 # Executables (optional, but safe to ignore)
 *.exe

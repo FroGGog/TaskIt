@@ -29,12 +29,31 @@ void runCommand(TaskManager &manager, std::string_view text_line)
         }
         else
         {
-            manager.addTask(std::string(fullCommand.at(1)), std::string(fullCommand.at(2)));
+            manager.addTask(std::string(fullCommand[1]), std::string(fullCommand[2]));
         }
     }
     else if(fullCommand[0] == "list")
     {
         manager.printAllTasks();
+    }
+    else if(fullCommand[0] == "show")
+    {
+        if(fullCommand.size() != 2)
+        {
+            std::cerr << "taskit> Usage: show \"id\"\n";
+            return;
+        }
+        else
+        {
+            try
+            {
+                manager.printTaskById(std::stoi(fullCommand[1]));
+            }
+            catch (const std::invalid_argument& e)
+            {
+                std::cout << "taskit> Usage: show \"id(int)\"\n";
+            }
+        }
     }
     else if(fullCommand[0] == "quit")
     {
