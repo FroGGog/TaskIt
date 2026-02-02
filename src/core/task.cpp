@@ -10,8 +10,29 @@ std::string statusToString(TaskStatus status)
         return "In Progress";
     case TaskStatus::DONE:
         return "Done";
-    default:        
-        break;
+    default:
+        return "None";
+    }
+}
+
+TaskStatus stringToStatus(std::string_view str_status)
+{
+    if(str_status == "todo")
+    {
+        return TaskStatus::TO_DO;
+    }
+    else if (str_status == "progress")
+    {
+        return TaskStatus::IN_PROGRESS;
+    }
+    else if (str_status == "done")
+    {
+        return TaskStatus::DONE;
+    }
+    else
+    {
+        std::cerr << "taskit> No such status, setting status to None\n";
+        return TaskStatus::NONE;
     }
 }
 

@@ -51,8 +51,28 @@ void runCommand(TaskManager &manager, std::string_view text_line)
             }
             catch (const std::invalid_argument& e)
             {
-                std::cout << "taskit> Usage: show \"id(int)\"\n";
+                std::cerr << "taskit> Usage: show \"id(int)\"\n";
             }
+        }
+    }
+    else if(fullCommand[0] == "status")
+    {
+        if(fullCommand.size() != 3)
+        {
+            std::cerr << "taskit> Usage: status \"id\" \"(todo, progress, done)\"\n";
+            return;
+        }
+        try
+        {
+            manager.changeTaskStatus(std::stoi(fullCommand[1]), stringToStatus(fullCommand[2]));
+        }
+        catch (const std::invalid_argument& e)
+        {
+            std::cerr << "taskit> Usage: status \"id(int)\" \"status(todo, progress, done)\"\n";
+        }
+        catch (const std::out_of_range& e)
+        {
+            std::cerr << "taskit> Usage: status \"id(int)\" \"status(todo, progress, done)\"\n";
         }
     }
     else if(fullCommand[0] == "quit")

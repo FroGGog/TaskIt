@@ -2,10 +2,12 @@
 
 #include <string>
 #include <cstdint>
+#include <iostream>
 
-enum class TaskStatus: std::uint8_t {TO_DO, IN_PROGRESS, DONE};
+enum class TaskStatus: std::uint8_t {TO_DO, IN_PROGRESS, DONE, NONE};
 
 std::string statusToString(TaskStatus status);
+TaskStatus stringToStatus(std::string_view str_status);
 
 class Task
 {
