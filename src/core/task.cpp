@@ -1,6 +1,6 @@
 #include "task.h"
 
-std::string statusToString(TaskStatus status)
+std::optional<std::string> statusToString(TaskStatus status)
 {
     switch (status)
     {
@@ -11,11 +11,11 @@ std::string statusToString(TaskStatus status)
     case TaskStatus::DONE:
         return "Done";
     default:
-        return "None";
+        return std::nullopt;
     }
 }
 
-TaskStatus stringToStatus(std::string_view str_status)
+std::optional<TaskStatus> stringToStatus(std::string_view str_status)
 {
     if(str_status == "todo")
     {
@@ -31,8 +31,7 @@ TaskStatus stringToStatus(std::string_view str_status)
     }
     else
     {
-        std::cerr << "taskit> No such status, setting status to None\n";
-        return TaskStatus::NONE;
+        return std::nullopt;
     }
 }
 

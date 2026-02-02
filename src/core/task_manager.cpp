@@ -26,7 +26,7 @@ void TaskManager::printAllTasks() const
     for(const auto& task : m_task_storage)
     {
         std::cout << "ID: " << task.first << " | Title: " << task.second.getTitle() << " | Description: " << task.second.getDescription() 
-                  << " | Status: " << statusToString(task.second.getStatus()) << '\n';
+                  << " | Status: " << statusToString(task.second.getStatus()).value() << '\n';
     }
 }
 
@@ -36,7 +36,7 @@ void TaskManager::printTaskById(int task_id) const
     {
         const auto& task = m_task_storage.at(task_id);
         std::cout << "ID: " <<  task_id << " | Title: " << task.getTitle() << " | Description: " << task.getDescription()
-                  << " | Status: " << statusToString(task.getStatus()) << "\n";
+                  << " | Status: " << statusToString(task.getStatus()).value() << "\n";
     }
     catch(const std::out_of_range& e)
     {

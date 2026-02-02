@@ -241,14 +241,6 @@ TEST(CLIIntegrationTest, RunCommand_Status_ExistingTask_ChangesStatus) {
 
     runCommand(manager, "status 1 done");
     EXPECT_EQ(manager.getTaskById(1).getStatus(), TaskStatus::DONE);
-
-    // Проверим, что статус "none" также работает (хотя и с предупреждением)
-    testing::internal::CaptureStderr();
-    runCommand(manager, "status 1 none");
-    std::string warning_output = testing::internal::GetCapturedStderr();
-    // После вызова none статус должен быть NONE
-    EXPECT_EQ(manager.getTaskById(1).getStatus(), TaskStatus::NONE);
-    EXPECT_TRUE(Contains(warning_output, "No such status")); // Проверяем предупреждение
 }
 
 TEST(CLIIntegrationTest, RunCommand_Status_NonExistentTask_ShowsError) {
@@ -275,7 +267,7 @@ TEST(CLIIntegrationTest, RunCommand_Status_InvalidStatusFormat_ShowsError) {
     testing::internal::CaptureStderr();
     runCommand(manager, "status 1 invalid_status");
     std::string error_output = testing::internal::GetCapturedStderr();
-    EXPECT_TRUE(Contains(error_output, "No such status")); // Сообщение из stringToStatus
+    EXPECT_TRUE(Contains(error_output, "Usage: status \"id(int)\" \"status(todo, progress, done)\""));
 }
 
 TEST(CLIIntegrationTest, RunCommand_Status_MissingArgs_ShowsError) {
@@ -309,16 +301,12 @@ TEST(StringToStatusTest, ValidStatusesConvertCorrectly) {
 }
 
 TEST(StringToStatusTest, InvalidStatusReturnsNoneAndPrintsError) {
-    testing::internal::CaptureStderr();
-    TaskStatus status = stringToStatus("invalid");
-    std::string error_output = testing::internal::GetCapturedStderr();
-    EXPECT_EQ(status, TaskStatus::NONE);
-    EXPECT_TRUE(Contains(error_output, "No such status"));
+    std::optional<TaskStatus> status = stringToStatus("invalid");
+    EXPECT_EQ(status, std::nullopt);
 }
 
 TEST(StatusToStringTest, AllStatusesConvertToStringCorrectly) {
     EXPECT_EQ(statusToString(TaskStatus::TO_DO), "To Do");
     EXPECT_EQ(statusToString(TaskStatus::IN_PROGRESS), "In Progress");
     EXPECT_EQ(statusToString(TaskStatus::DONE), "Done");
-    EXPECT_EQ(statusToString(TaskStatus::NONE), "None"); // Проверка default case
 }

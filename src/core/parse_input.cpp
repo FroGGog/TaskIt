@@ -64,7 +64,15 @@ void runCommand(TaskManager &manager, std::string_view text_line)
         }
         try
         {
-            manager.changeTaskStatus(std::stoi(fullCommand[1]), stringToStatus(fullCommand[2]));
+            if(stringToStatus(fullCommand[2]).has_value())
+            {
+                manager.changeTaskStatus(std::stoi(fullCommand[1]), stringToStatus(fullCommand[2]).value());
+            }
+            else
+            {
+                std::cerr << "taskit> Usage: status \"id(int)\" \"status(todo, progress, done)\"\n";    
+            }
+            
         }
         catch (const std::invalid_argument& e)
         {
