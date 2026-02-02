@@ -9,8 +9,8 @@ FetchContent_Declare(SFML
 )
 FetchContent_MakeAvailable(SFML)
 
-add_executable(TaskItGUI main.cpp)
+add_executable(TaskItGUI main.cpp MainWindow.cpp)
 
 target_compile_features(TaskItGUI PRIVATE cxx_std_17)
 
-target_link_libraries(TaskItGUI PRIVATE core SFML::Graphics SFML::Window SFML::System)
+target_link_libraries(TaskItGUI PRIVATE core SFML::Graphics)
