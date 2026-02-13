@@ -1,5 +1,6 @@
 # Build directories
 /build/
+/build_gui/
 /_build/
 /out/
 /bin/
@@ -47,9 +48,10 @@ compile_commands.json
 *.lib
 *.a
 
-# PowerShell scripts output (if any)
+# PowerShell scripts output (if any) and bash scripts
 *.ps1
 *.xml
+*.sh
 
 # Debug artifacts (Windows)
 Debug/
