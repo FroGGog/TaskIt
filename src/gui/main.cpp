@@ -4,7 +4,7 @@
 
 int main()
 {
-    MainWindow win{sf::VideoMode({800, 600}), "Test"};
+    MainWindow win{TaskItSettings::WIN_RESOLUTION};
 
     while(win.isOpen())
     {

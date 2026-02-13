@@ -12,37 +12,79 @@
 #include <sstream>
 
 #include "task.h"
+#include "Settings.h"
 
 struct UsedMaterials
 {
-    std::shared_ptr<sf::Font> task_box_font;
+    std::shared_ptr<sf::Font> global_font;
 
     UsedMaterials();
 };
 
 namespace gui
 {
-    class TaskBox
-{
-public:
-    TaskBox(const Task& task, const int task_index, const UsedMaterials& materials);
 
-    void draw(sf::RenderWindow& r_wind);
+    class GuiElement
+    {
+        public:
+            GuiElement() = default;
 
-private:
+            virtual void draw(sf::RenderWindow& r_wind) const = 0;
+    };
 
-    std::string getCurrentTime();
+    class TaskBox : public GuiElement
+    {
+    public:
+        TaskBox(const Task& task, const int task_index, const UsedMaterials& materials);
 
-    int m_task_index;
+        void draw(sf::RenderWindow& r_wind) const override;
 
-    std::unique_ptr<sf::Text> m_text_title;
-    std::unique_ptr<sf::Text> m_text_descr;
-    std::unique_ptr<sf::Text> m_text_create_time;
+        void setPosition(sf::Vector2f pos);
+        void setColor(sf::Color color);
 
-    std::tm m_create_time{};
+    private:
 
-    sf::RectangleShape m_background_shape;
+        std::string getCurrentTime();
 
-};
+        void updateTextPositions();
+
+        int m_task_index;
+
+        std::unique_ptr<sf::Text> m_text_title;
+        std::unique_ptr<sf::Text> m_text_descr;
+        std::unique_ptr<sf::Text> m_text_create_time;
+
+        std::tm m_create_time{};
+
+        sf::RectangleShape m_background_shape;
+    };
+
+    class KanbanCollumn : public GuiElement
+    {
+    public:
+        KanbanCollumn(std::string title ,const UsedMaterials& materials);
+
+        void setPosition(sf::Vector2f pos);
+        void setIndicatorColor(sf::Color color);
+        void setHeaderTitle(std::string str);
+
+        sf::FloatRect getGlobalBounds() const;
+
+        void draw(sf::RenderWindow& r_wind) const override;
+
+        // void addTask(std::shared_ptr<TaskBox> taskBox);
+
+    private:
+        sf::RectangleShape m_body_box;
+        sf::RectangleShape m_title_box;
+        sf::RectangleShape m_indicator_box;
+
+        std::unique_ptr<sf::Text> m_header_text;
+
+        std::vector<Task> m_tasks_in_collumn;
+        std::vector<std::shared_ptr<TaskBox>> m_task_box_in_collumn;
+
+    };
+
 }
 

@@ -12,9 +12,8 @@ private:
 
     sf::RenderWindow m_window;
 
-    void initWindow(sf::VideoMode vid_mode,const std::string& title);
+    void initWindow(sf::VideoMode vid_mode);
     void initGUI();
-
 
     void sRender();
     void sWindowEvents();
@@ -22,11 +21,12 @@ private:
     TaskManager m_manager;
 
     UsedMaterials materials;
-    std::shared_ptr<gui::TaskBox> temp_box;
+
+    std::vector<std::shared_ptr<gui::GuiElement>> gui_elems;
 
 public:
 
-    MainWindow(sf::VideoMode vid_mode,const std::string& title);
+    MainWindow(sf::VideoMode vid_mode);
 
     void update();
     bool isOpen() const;
