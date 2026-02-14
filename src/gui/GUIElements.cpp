@@ -27,7 +27,7 @@ void gui::TaskBox::updateTextPositions()
 gui::TaskBox::TaskBox(const Task &task, const int task_index, const UsedMaterials &materials)
     : m_task_index(task_index)
 {
-    m_background_shape.setSize(sf::Vector2f{187.f, 90.f});
+    m_background_shape.setSize(sf::Vector2f{TaskItSizes::TASK_SIZE_X, TaskItSizes::TASK_SIZE_Y});
     m_text_title = std::make_unique<sf::Text>(*materials.global_font,
         task.getTitle(), 16);
     m_text_title->setFillColor(TaskItColors::TASK_TEXT);
@@ -62,6 +62,11 @@ void gui::TaskBox::setColor(sf::Color color)
     m_background_shape.setFillColor(color);
 }
 
+sf::FloatRect gui::TaskBox::getGlobalBounds() const
+{
+    return m_background_shape.getGlobalBounds();
+}
+
 std::string gui::TaskBox::getCurrentTime()
 {
     auto now = std::chrono::system_clock::now();
@@ -82,21 +87,37 @@ std::string gui::TaskBox::getCurrentTime()
 }
 
 
+void gui::KanbanCollumn::setUpLayout()
+{
+    m_layout_box.setPosition(sf::Vector2f{m_title_box.getGlobalBounds().position.x +
+        TaskItSettings::BIG_PADDING,
+        m_title_box.getGlobalBounds().position.y +
+        m_title_box.getGlobalBounds().size.y +
+        TaskItSettings::BIG_PADDING});
+}
+
 gui::KanbanCollumn::KanbanCollumn(std::string title, const UsedMaterials& materials)
 {
-    m_body_box.setSize(sf::Vector2f{220, 550});
+    m_body_box.setSize(sf::Vector2f{TaskItSizes::COLLUMN_SIZE_X, TaskItSizes::COLLUMN_SIZE_Y});
     m_body_box.setFillColor(TaskItColors::COLLUMN);
 
-    m_title_box.setSize(sf::Vector2f{220, 30});
+    m_title_box.setSize(sf::Vector2f{TaskItSizes::COLLUMN_SIZE_X, TaskItSizes::COLLUMN_TITLE_SIZE_Y});
     m_title_box.setFillColor(TaskItColors::COLLUMN_HEADER);
 
-    m_indicator_box.setSize(sf::Vector2f{220, 5});
+    m_indicator_box.setSize(sf::Vector2f{TaskItSizes::COLLUMN_SIZE_X, TaskItSizes::COLLUMN_INDICATOR_SIZE_Y});
 
     m_header_text = std::make_unique<sf::Text>(*materials.global_font);
     m_header_text->setFont(*materials.global_font);
     m_header_text->setCharacterSize(10);
     m_header_text->setFillColor(TaskItColors::COLLUMN_HEADER_TEXT);
     m_header_text->setString(std::move(title));
+
+    m_layout_box.setSize(sf::Vector2f{TaskItSizes::COLLUMN_SIZE_X - TaskItSettings::MEDIUM_PADDING,
+        TaskItSizes::COLLUMN_SIZE_Y - TaskItSettings::MEDIUM_PADDING});
+    setUpLayout();
+
+    m_max_task_in_collumn = m_layout_box.getGlobalBounds().size.y / (TaskItSizes::TASK_SIZE_Y + TaskItSettings::BIG_PADDING);
+    std::cout << "Max task: " << m_max_task_in_collumn << '\n';
 }
 
 void gui::KanbanCollumn::setPosition(sf::Vector2f pos)
@@ -104,6 +125,7 @@ void gui::KanbanCollumn::setPosition(sf::Vector2f pos)
     m_body_box.setPosition(pos);
     m_title_box.setPosition(pos);
     m_indicator_box.setPosition(pos);
+    setUpLayout();
 
     sf::Vector2f boxCenter = m_title_box.getGlobalBounds().getCenter();
     sf::FloatRect textBounds = m_header_text->getGlobalBounds();
@@ -133,4 +155,47 @@ void gui::KanbanCollumn::draw(sf::RenderWindow &r_wind) const
     r_wind.draw(m_title_box);
     r_wind.draw(m_indicator_box);
     r_wind.draw(*m_header_text);
+
+    for(const auto& task : m_task_box_in_collumn)
+    {
+        if (task) {  
+            task->draw(r_wind);
+        }
+    }
+    
 }
+
+void gui::KanbanCollumn::addTaskToLayout(const Task &task, const int task_index, const UsedMaterials &materials)
+{
+    auto tempBox = std::make_shared<gui::TaskBox>(task, task_index, materials);
+    switch (task.getStatus())
+    {
+    case TaskStatus::TO_DO:
+        tempBox->setColor(TaskItColors::TASK_TODO);
+        break;
+    case TaskStatus::IN_PROGRESS:
+        tempBox->setColor(TaskItColors::TASK_PROGRESS);
+        break;
+    case TaskStatus::DONE:
+        tempBox->setColor(TaskItColors::TASK_DONE);
+        break;
+    default:
+        break;
+    }
+
+    // add first task to collum
+    if(m_task_box_in_collumn.empty())
+    {
+        tempBox->setPosition(m_layout_box.getGlobalBounds().position);
+    }
+    else
+    {
+        auto back_task = m_task_box_in_collumn.back();
+        tempBox->setPosition(sf::Vector2f{back_task->getGlobalBounds().position.x,
+            back_task->getGlobalBounds().position.y +
+            back_task->getGlobalBounds().size.y +
+            TaskItSettings::BIG_PADDING});
+    }
+    m_task_box_in_collumn.push_back(tempBox);
+}
+

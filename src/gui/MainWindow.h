@@ -17,6 +17,7 @@ private:
 
     void sRender();
     void sWindowEvents();
+    void sUpdateCollumns();
 
     TaskManager m_manager;
 

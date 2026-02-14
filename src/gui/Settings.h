@@ -34,3 +34,19 @@ namespace TaskItSettings
     const sf::VideoMode WIN_RESOLUTION(sf::Vector2u{800, 600});
     const sf::String WIN_TITLE{"TaskIt"};
 } 
+
+namespace TaskItSizes
+{
+    // Task size
+    constexpr float TASK_SIZE_X = 187.f;
+    constexpr float TASK_SIZE_Y = 90.f;
+
+    // Kanban sizes
+    constexpr float COLLUMN_SIZE_X = 220.f;
+    constexpr float COLLUMN_SIZE_Y = 550.f;
+
+    constexpr float COLLUMN_TITLE_SIZE_Y = 30.f;
+    constexpr float COLLUMN_INDICATOR_SIZE_Y = 5.f;
+
+
+}

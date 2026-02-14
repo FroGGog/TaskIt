@@ -1,9 +1,10 @@
 #include "task_manager.h"
 
-void TaskManager::addTask(const std::string& title, const std::string& description)
+Task& TaskManager::addTask(const std::string& title, const std::string& description)
 {
-    m_task_storage.insert({m_next_task_id, Task(title, description)});
-    m_next_task_id++;
+    int newID = m_next_task_id++;
+    auto [it, inserted] = m_task_storage.emplace(newID, Task(title, description));
+    return it->second;
 }
 
 Task &TaskManager::getTaskById(int task_id)
@@ -11,7 +12,7 @@ Task &TaskManager::getTaskById(int task_id)
     return m_task_storage.at(task_id);
 }
 
-const std::unordered_map<int, Task>& TaskManager::getAllTasks() const
+std::unordered_map<int, Task>& TaskManager::getAllTasks()
 {
     return m_task_storage;
 }
