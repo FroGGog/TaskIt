@@ -42,7 +42,8 @@ namespace gui
         void setPosition(sf::Vector2f pos);
         void setColor(sf::Color color);
 
-        sf::FloatRect getGlobalBounds() const;
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const;
+        [[nodiscard]] int getIndex() const;
 
     private:
 
@@ -70,12 +71,15 @@ namespace gui
         void setIndicatorColor(sf::Color color);
         void setHeaderTitle(std::string str);
 
-        sf::FloatRect getGlobalBounds() const;
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const;
 
         void draw(sf::RenderWindow& r_wind) const override;
 
         // void addTask(std::shared_ptr<TaskBox> taskBox);
         void addTaskToLayout(const Task& task, const int task_index, const UsedMaterials& materials);
+
+        [[nodiscard]] bool taskInColumn(int task_id);
+        void clearCollumn();
 
     private:
         sf::RectangleShape m_body_box;
@@ -85,7 +89,7 @@ namespace gui
 
         std::unique_ptr<sf::Text> m_header_text;
 
-        std::vector<std::shared_ptr<TaskBox>> m_task_box_in_collumn;
+        std::vector<std::shared_ptr<gui::TaskBox>> m_task_box_in_collumn;
         int m_max_task_in_collumn;
 
         void setUpLayout();

@@ -3,7 +3,7 @@
 Task& TaskManager::addTask(const std::string& title, const std::string& description)
 {
     int newID = m_next_task_id++;
-    auto [it, inserted] = m_task_storage.emplace(newID, Task(title, description));
+    auto [it, inserted] = m_task_storage.emplace(newID, Task(title + ' ' + std::to_string(newID), description));
     return it->second;
 }
 

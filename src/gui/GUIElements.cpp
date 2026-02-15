@@ -67,6 +67,11 @@ sf::FloatRect gui::TaskBox::getGlobalBounds() const
     return m_background_shape.getGlobalBounds();
 }
 
+int gui::TaskBox::getIndex() const
+{
+    return m_task_index;
+}
+
 std::string gui::TaskBox::getCurrentTime()
 {
     auto now = std::chrono::system_clock::now();
@@ -149,6 +154,7 @@ sf::FloatRect gui::KanbanCollumn::getGlobalBounds() const
     return m_body_box.getGlobalBounds();
 }
 
+
 void gui::KanbanCollumn::draw(sf::RenderWindow &r_wind) const
 {
     r_wind.draw(m_body_box);
@@ -199,3 +205,19 @@ void gui::KanbanCollumn::addTaskToLayout(const Task &task, const int task_index,
     m_task_box_in_collumn.push_back(tempBox);
 }
 
+bool gui::KanbanCollumn::taskInColumn(int task_id)
+{
+    for(const auto& task : m_task_box_in_collumn)
+    {
+        if(task->getIndex() == task_id)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void gui::KanbanCollumn::clearCollumn()
+{
+    m_task_box_in_collumn.clear();
+}

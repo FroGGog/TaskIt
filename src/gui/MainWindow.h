@@ -17,7 +17,7 @@ private:
 
     void sRender();
     void sWindowEvents();
-    void sUpdateCollumns();
+    void sRefreshBoard();
 
     TaskManager m_manager;
 
@@ -25,6 +25,11 @@ private:
 
     std::vector<std::shared_ptr<gui::GuiElement>> gui_elems;
 
+    std::shared_ptr<gui::KanbanCollumn> todo_collumn, in_pg_collumn, done_collumn;
+
+    bool m_t_key_available = true;
+    bool m_y_key_available = true;
+    bool m_u_key_available = true;
 public:
 
     MainWindow(sf::VideoMode vid_mode);
