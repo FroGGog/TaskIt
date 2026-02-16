@@ -41,6 +41,7 @@ namespace gui
 
         void setPosition(sf::Vector2f pos);
         void setColor(sf::Color color);
+        void setIsChoosen(bool is_choosen);
 
         [[nodiscard]] sf::FloatRect getGlobalBounds() const;
         [[nodiscard]] int getIndex() const;
@@ -63,6 +64,8 @@ namespace gui
         sf::RectangleShape m_background_shape;
 
         TaskStatus m_current_status;
+
+        bool m_is_choosen = false;
     };
 
     class KanbanCollumn : public GuiElement

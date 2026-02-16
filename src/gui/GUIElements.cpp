@@ -62,6 +62,22 @@ void gui::TaskBox::setColor(sf::Color color)
     m_background_shape.setFillColor(color);
 }
 
+void gui::TaskBox::setIsChoosen(bool is_choosen)
+{
+    if(!m_is_choosen && is_choosen)
+    {
+        m_background_shape.setOutlineThickness(3.f);
+        m_background_shape.setOutlineColor(TaskItColors::TASK_HOVER_OUTLINE);
+        m_is_choosen = true;
+    }
+    else if((m_is_choosen && is_choosen) || !is_choosen)
+    {
+        m_background_shape.setOutlineThickness(0.f);
+        m_is_choosen = false;
+    }
+
+}
+
 sf::FloatRect gui::TaskBox::getGlobalBounds() const
 {
     return m_background_shape.getGlobalBounds();

@@ -24,6 +24,8 @@ namespace TaskItColors
     constexpr sf::Color TASK_PROGRESS_HOVER {250, 205, 135, 255};
     constexpr sf::Color TASK_DONE_HOVER {155, 205, 175, 255};
 
+    constexpr sf::Color TASK_HOVER_OUTLINE {255, 255, 255, 120};
+
     constexpr sf::Color TASK_TEXT {30, 30, 35, 255};
 };
 

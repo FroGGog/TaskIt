@@ -1,5 +1,20 @@
 #include "MainWindow.h"
 
+void MainWindow::resetClickedTask()
+{
+    for(const auto& collumn : gui_elems)
+    {
+        auto kanbanCollumn = std::dynamic_pointer_cast<gui::KanbanCollumn>(collumn);
+        if(!kanbanCollumn)
+        {
+            continue;
+        }
+        for(const auto& task : kanbanCollumn->getAllTasks())
+        {
+            task->setIsChoosen(false);
+        }
+    }
+}
 
 MainWindow::MainWindow(sf::VideoMode vid_mode)
 {
@@ -182,15 +197,23 @@ void MainWindow::sWindowEvents()
                 m_u_key_available = true;
             }
         }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+        {
+            if(m_hovered_task)
+            {
+                resetClickedTask();
+                m_hovered_task->setIsChoosen(true);
+            }
+        }
     }
 }
 
 
 void MainWindow::update()
 {
-    sWindowEvents();
-
     sCheckHover();
+
+    sWindowEvents();
 
     sRender();
 }

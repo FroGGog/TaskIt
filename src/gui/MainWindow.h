@@ -32,6 +32,8 @@ private:
     bool m_t_key_available = true;
     bool m_y_key_available = true;
     bool m_u_key_available = true;
+
+    void resetClickedTask();
 public:
 
     MainWindow(sf::VideoMode vid_mode);
