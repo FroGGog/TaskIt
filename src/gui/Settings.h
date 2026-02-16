@@ -20,6 +20,10 @@ namespace TaskItColors
     constexpr sf::Color TASK_PROGRESS {230, 190, 120, 255}; 
     constexpr sf::Color TASK_DONE {140, 190, 160, 255};     
 
+    constexpr sf::Color TASK_TODO_HOVER {220, 155, 155, 255};     
+    constexpr sf::Color TASK_PROGRESS_HOVER {250, 205, 135, 255};
+    constexpr sf::Color TASK_DONE_HOVER {155, 205, 175, 255};
+
     constexpr sf::Color TASK_TEXT {30, 30, 35, 255};
 };
 
@@ -29,7 +33,7 @@ namespace TaskItSettings
     constexpr float MEDIUM_PADDING = 10.f;
     constexpr float BIG_PADDING = 15.f;
     
-    constexpr unsigned int FPS = 60;
+    constexpr unsigned int FPS = 30;
 
     const sf::VideoMode WIN_RESOLUTION(sf::Vector2u{800, 600});
     const sf::String WIN_TITLE{"TaskIt"};

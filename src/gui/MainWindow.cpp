@@ -38,6 +38,62 @@ void MainWindow::sRefreshBoard()
     }
 }
 
+void MainWindow::sCheckHover()
+{
+    sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
+    sf::Vector2f world_pos = m_window.mapPixelToCoords(mouse_pos);
+
+    if(m_hovered_task)
+    {
+        switch (m_hovered_task->getStatus())
+        {
+            case TaskStatus::TO_DO:
+                m_hovered_task->setColor(TaskItColors::TASK_TODO);
+                break;
+            case TaskStatus::IN_PROGRESS:
+                m_hovered_task->setColor(TaskItColors::TASK_PROGRESS);
+                break;
+            case TaskStatus::DONE:
+                m_hovered_task->setColor(TaskItColors::TASK_DONE);
+                break;
+            default:
+                break;
+        }
+        m_hovered_task = nullptr;
+    }
+
+    for(const auto& collumn : gui_elems)
+    {
+        auto kanbanCollumn = std::dynamic_pointer_cast<gui::KanbanCollumn>(collumn);
+        if(!kanbanCollumn)
+        {
+            continue;
+        }
+
+        for(const auto& task : kanbanCollumn->getAllTasks())
+        {
+            if(task->getGlobalBounds().contains(world_pos))
+            {
+                switch (task->getStatus())
+                {
+                    case TaskStatus::TO_DO:
+                        task->setColor(TaskItColors::TASK_TODO_HOVER);
+                        break;
+                    case TaskStatus::IN_PROGRESS:
+                        task->setColor(TaskItColors::TASK_PROGRESS_HOVER);
+                        break;
+                    case TaskStatus::DONE:
+                        task->setColor(TaskItColors::TASK_DONE_HOVER);
+                        break;
+                    default:
+                        break;
+                }
+                m_hovered_task = task;
+            }
+        }
+    }
+}
+
 void MainWindow::initGUI()
 {
     todo_collumn = std::make_shared<gui::KanbanCollumn>("TO DO", materials);
@@ -133,6 +189,8 @@ void MainWindow::sWindowEvents()
 void MainWindow::update()
 {
     sWindowEvents();
+
+    sCheckHover();
 
     sRender();
 }

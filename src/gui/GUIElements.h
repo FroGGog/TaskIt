@@ -44,6 +44,7 @@ namespace gui
 
         [[nodiscard]] sf::FloatRect getGlobalBounds() const;
         [[nodiscard]] int getIndex() const;
+        [[nodiscard]] TaskStatus getStatus() const;
 
     private:
 
@@ -60,6 +61,8 @@ namespace gui
         std::tm m_create_time{};
 
         sf::RectangleShape m_background_shape;
+
+        TaskStatus m_current_status;
     };
 
     class KanbanCollumn : public GuiElement
@@ -79,6 +82,7 @@ namespace gui
         void addTaskToLayout(const Task& task, const int task_index, const UsedMaterials& materials);
 
         [[nodiscard]] bool taskInColumn(int task_id);
+        std::vector<std::shared_ptr<gui::TaskBox>>& getAllTasks();
         void clearCollumn();
 
     private:

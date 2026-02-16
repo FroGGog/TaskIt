@@ -25,7 +25,7 @@ void gui::TaskBox::updateTextPositions()
 }
 
 gui::TaskBox::TaskBox(const Task &task, const int task_index, const UsedMaterials &materials)
-    : m_task_index(task_index)
+    : m_task_index(task_index), m_current_status(task.getStatus())
 {
     m_background_shape.setSize(sf::Vector2f{TaskItSizes::TASK_SIZE_X, TaskItSizes::TASK_SIZE_Y});
     m_text_title = std::make_unique<sf::Text>(*materials.global_font,
@@ -70,6 +70,11 @@ sf::FloatRect gui::TaskBox::getGlobalBounds() const
 int gui::TaskBox::getIndex() const
 {
     return m_task_index;
+}
+
+TaskStatus gui::TaskBox::getStatus() const
+{
+    return m_current_status;
 }
 
 std::string gui::TaskBox::getCurrentTime()
@@ -215,6 +220,11 @@ bool gui::KanbanCollumn::taskInColumn(int task_id)
         }
     }
     return false;
+}
+
+std::vector<std::shared_ptr<gui::TaskBox>> &gui::KanbanCollumn::getAllTasks()
+{
+    return m_task_box_in_collumn;
 }
 
 void gui::KanbanCollumn::clearCollumn()

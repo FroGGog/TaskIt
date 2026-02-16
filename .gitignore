@@ -58,3 +58,5 @@ compile_commands.json
 Debug/
 Release/
 x64/
+
+compile_commands_gui.json
