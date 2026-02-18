@@ -28,6 +28,7 @@ namespace gui
     {
         public:
             GuiElement() = default;
+            virtual ~GuiElement() = default;
 
             virtual void draw(sf::RenderWindow& r_wind) const = 0;
     };

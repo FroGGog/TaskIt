@@ -1,6 +1,7 @@
 # Build directories
 /build/
 /build_gui/
+/build_cli/
 /_build/
 /out/
 /bin/
@@ -30,6 +31,8 @@ _Deps/
 
 # Compile commands & tools
 compile_commands.json
+compile_commands_cli.json
+compile_commands_gui.json
 
 # Clang-Tidy
 .clang-tidy
@@ -59,4 +62,3 @@ Debug/
 Release/
 x64/
 
-compile_commands_gui.json

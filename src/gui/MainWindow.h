@@ -36,7 +36,7 @@ private:
     void resetClickedTask();
 public:
 
-    MainWindow(sf::VideoMode vid_mode);
+    explicit MainWindow(sf::VideoMode vid_mode);
 
     void update();
     bool isOpen() const;
