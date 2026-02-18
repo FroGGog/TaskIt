@@ -93,6 +93,11 @@ TaskStatus gui::TaskBox::getStatus() const
     return m_current_status;
 }
 
+bool gui::TaskBox::isChoosen() const
+{
+    return m_is_choosen;
+}
+
 std::string gui::TaskBox::getCurrentTime()
 {
     auto now = std::chrono::system_clock::now();
@@ -182,14 +187,16 @@ void gui::KanbanCollumn::draw(sf::RenderWindow &r_wind) const
     r_wind.draw(m_title_box);
     r_wind.draw(m_indicator_box);
     r_wind.draw(*m_header_text);
+}
 
+void gui::KanbanCollumn::drawTasks(sf::RenderWindow &r_wind) const
+{
     for(const auto& task : m_task_box_in_collumn)
     {
         if (task) {  
             task->draw(r_wind);
         }
     }
-    
 }
 
 void gui::KanbanCollumn::addTaskToLayout(const Task &task, const int task_index, const UsedMaterials &materials)

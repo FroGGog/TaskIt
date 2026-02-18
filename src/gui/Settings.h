@@ -37,6 +37,8 @@ namespace TaskItSettings
     
     constexpr unsigned int FPS = 30;
 
+    constexpr float LONG_PRESS_DURATION = 0.5f;
+
     const sf::VideoMode WIN_RESOLUTION(sf::Vector2u{800, 600});
     const sf::String WIN_TITLE{"TaskIt"};
 } 

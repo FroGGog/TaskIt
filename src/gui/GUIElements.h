@@ -47,6 +47,7 @@ namespace gui
         [[nodiscard]] sf::FloatRect getGlobalBounds() const;
         [[nodiscard]] int getIndex() const;
         [[nodiscard]] TaskStatus getStatus() const;
+        [[nodiscard]] bool isChoosen() const;
 
     private:
 
@@ -81,6 +82,7 @@ namespace gui
         [[nodiscard]] sf::FloatRect getGlobalBounds() const;
 
         void draw(sf::RenderWindow& r_wind) const override;
+        void drawTasks(sf::RenderWindow& r_wind) const;
 
         // void addTask(std::shared_ptr<TaskBox> taskBox);
         void addTaskToLayout(const Task& task, const int task_index, const UsedMaterials& materials);

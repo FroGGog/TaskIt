@@ -20,6 +20,8 @@ MainWindow::MainWindow(sf::VideoMode vid_mode)
 {
     initWindow(vid_mode);
     initGUI();
+
+    m_saved_pos = sf::Vector2f{0.f, 0.f};
 }
 
 void MainWindow::initWindow(sf::VideoMode vid_mode)
@@ -55,6 +57,11 @@ void MainWindow::sRefreshBoard()
 
 void MainWindow::sCheckHover()
 {
+    if(m_is_long_mouse_press)
+    {
+        return;
+    }
+
     sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
     sf::Vector2f world_pos = m_window.mapPixelToCoords(mouse_pos);
 
@@ -109,6 +116,41 @@ void MainWindow::sCheckHover()
     }
 }
 
+void MainWindow::sMoveTasks()
+{
+    if(m_hovered_task && m_is_long_mouse_press)
+    {
+        if(m_saved_pos.x == 0 && m_saved_pos.y == 0)
+        {
+            m_saved_pos = m_hovered_task->getGlobalBounds().position;
+        }
+        if(!m_hovered_task->isChoosen())
+        {
+            m_hovered_task->setIsChoosen(true);
+        }
+        sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
+        sf::Vector2f world_pos = m_window.mapPixelToCoords(mouse_pos);
+
+        m_hovered_task->setPosition(world_pos);
+    }
+}
+
+void MainWindow::sMoveTaskToCollumn()
+{
+    if((m_hovered_task->getGlobalBounds().findIntersection(in_pg_collumn->getGlobalBounds())).has_value())
+    {
+        Task& tempTask = m_manager.addTask("Test", "Task");
+        tempTask.setStatus(TaskStatus::IN_PROGRESS);
+        sRefreshBoard();
+        std::cout << "Moved to pg collumn\n";
+    }
+    else
+    {
+        m_hovered_task->setPosition(m_saved_pos);
+        m_saved_pos = sf::Vector2f{0.f, 0.f};
+    }
+}
+
 void MainWindow::initGUI()
 {
     todo_collumn = std::make_shared<gui::KanbanCollumn>("TO DO", materials);
@@ -147,6 +189,9 @@ void MainWindow::sRender()
     {
         i->draw(m_window);
     }
+    todo_collumn->drawTasks(m_window);
+    in_pg_collumn->drawTasks(m_window);
+    done_collumn->drawTasks(m_window);
 
     m_window.display();
 }
@@ -197,12 +242,42 @@ void MainWindow::sWindowEvents()
                 m_u_key_available = true;
             }
         }
-        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+        else if(const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
         {
-            if(m_hovered_task)
+            if(mousePressed->button == sf::Mouse::Button::Left)
             {
-                resetClickedTask();
-                m_hovered_task->setIsChoosen(true);
+                m_is_mouse_pressed = true;
+                m_long_press_clock.restart();
+                m_is_long_mouse_press = false;
+            }
+        }
+        else if(const auto* mouseReleased = event->getIf<sf::Event::MouseButtonReleased>())
+        {
+            if(mouseReleased->button == sf::Mouse::Button::Left)
+            {
+                m_is_mouse_pressed = false;
+                // check if just click
+                if(m_long_press_clock.getElapsedTime().asSeconds() < TaskItSettings::LONG_PRESS_DURATION && !m_is_long_mouse_press)
+                {
+                    resetClickedTask();
+                    if(m_hovered_task)
+                    {
+                        m_hovered_task->setIsChoosen(true);
+                    }
+                }
+                // release after long press
+                if(m_is_long_mouse_press)
+                {
+                    m_is_long_mouse_press = false;
+                    if(m_hovered_task)
+                    {
+                        sMoveTaskToCollumn();
+                        m_hovered_task->setIsChoosen(false);
+                    }
+                    std::cout << "Press ended after: " << m_long_press_clock.getElapsedTime().asSeconds() << '\n';
+                }
+
+
             }
         }
     }
@@ -214,6 +289,18 @@ void MainWindow::update()
     sCheckHover();
 
     sWindowEvents();
+
+    if(m_is_mouse_pressed && !m_is_long_mouse_press)
+    {
+        if(m_long_press_clock.getElapsedTime().asSeconds() >= TaskItSettings::LONG_PRESS_DURATION)
+        {
+            m_is_long_mouse_press = true;
+
+            std::cout << "Long clicked mouse: " << m_long_press_clock.getElapsedTime().asSeconds() << '\n';
+        }
+    }
+
+    sMoveTasks();
 
     sRender();
 }

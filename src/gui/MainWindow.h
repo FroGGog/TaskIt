@@ -19,6 +19,8 @@ private:
     void sWindowEvents();
     void sRefreshBoard();
     void sCheckHover();
+    void sMoveTasks();
+    void sMoveTaskToCollumn();
 
     TaskManager m_manager;
 
@@ -32,6 +34,11 @@ private:
     bool m_t_key_available = true;
     bool m_y_key_available = true;
     bool m_u_key_available = true;
+
+    bool m_is_mouse_pressed = false;
+    bool m_is_long_mouse_press = false;
+    sf::Clock m_long_press_clock;
+    sf::Vector2f m_saved_pos;
 
     void resetClickedTask();
 public:
