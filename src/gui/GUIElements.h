@@ -31,6 +31,8 @@ namespace gui
             virtual ~GuiElement() = default;
 
             virtual void draw(sf::RenderWindow& r_wind) const = 0;
+
+            virtual sf::FloatRect getGlobalBounds() const = 0;
     };
 
     class TaskBox : public GuiElement
@@ -44,7 +46,7 @@ namespace gui
         void setColor(sf::Color color);
         void setIsChoosen(bool is_choosen);
 
-        [[nodiscard]] sf::FloatRect getGlobalBounds() const;
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
         [[nodiscard]] int getIndex() const;
         [[nodiscard]] TaskStatus getStatus() const;
         [[nodiscard]] bool isChoosen() const;
@@ -74,8 +76,10 @@ namespace gui
         void setPosition(sf::Vector2f pos);
         void setIndicatorColor(sf::Color color);
         void setHeaderTitle(std::string str);
+        void setCollumnTaskState(TaskStatus status);
 
-        [[nodiscard]] sf::FloatRect getGlobalBounds() const;
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
+        [[nodiscard]] TaskStatus getCollumnTaskStatus() const;
 
         void draw(sf::RenderWindow& r_wind) const override;
         void drawTasks(sf::RenderWindow& r_wind) const;
@@ -93,6 +97,7 @@ namespace gui
         sf::RectangleShape m_indicator_box;
         sf::RectangleShape m_layout_box;
 
+        TaskStatus m_collumn_task_state;
         std::unique_ptr<sf::Text> m_header_text;
 
         std::vector<std::shared_ptr<gui::TaskBox>> m_task_box_in_collumn;

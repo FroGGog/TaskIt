@@ -156,11 +156,20 @@ void gui::KanbanCollumn::setHeaderTitle(std::string str)
     m_header_text->setString(std::move(str));
 }
 
+void gui::KanbanCollumn::setCollumnTaskState(TaskStatus status)
+{
+    m_collumn_task_state = status;
+}
+
 sf::FloatRect gui::KanbanCollumn::getGlobalBounds() const
 {
     return m_body_box.getGlobalBounds();
 }
 
+TaskStatus gui::KanbanCollumn::getCollumnTaskStatus() const
+{
+    return m_collumn_task_state;
+}
 
 void gui::KanbanCollumn::draw(sf::RenderWindow &r_wind) const
 {

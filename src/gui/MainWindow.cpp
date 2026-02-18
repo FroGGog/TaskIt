@@ -141,18 +141,35 @@ void MainWindow::sMoveTasks()
 
 void MainWindow::sMoveTaskToCollumn()
 {
-    if((m_hovered_task->getGlobalBounds().findIntersection(in_pg_collumn->getGlobalBounds())).has_value())
+    if(!m_hovered_task || !m_choosed_task)
     {
-        Task& tempTask = m_manager.addTask("Test", "Task");
-        tempTask.setStatus(TaskStatus::IN_PROGRESS);
-        sRefreshBoard();
-        std::cout << "Moved to pg collumn\n";
+        return;
     }
-    else
+    int task_index = m_choosed_task->getIndex();
+    bool moved = false;
+
+    for(const auto& collumn : gui_elems)
+    {
+        auto kanbanCollumn = std::dynamic_pointer_cast<gui::KanbanCollumn>(collumn);
+        if(!kanbanCollumn)
+        {
+            continue;
+        }   
+        if((m_hovered_task->getGlobalBounds().findIntersection(kanbanCollumn->getGlobalBounds())).has_value()
+            && !kanbanCollumn->taskInColumn(m_choosed_task->getIndex()))
+        {
+            m_manager.getTaskById(task_index).setStatus(kanbanCollumn->getCollumnTaskStatus());
+            moved = true;
+            sRefreshBoard();
+            std::cout << "Moved to pg collumn\n";
+        }
+    }
+    if(!moved)
     {
         m_hovered_task->setPosition(m_saved_pos);
-        m_saved_pos = sf::Vector2f{0.f, 0.f};
     }
+        m_saved_pos = sf::Vector2f{0.f, 0.f};
+
 }
 
 void MainWindow::initGUI()
@@ -161,6 +178,7 @@ void MainWindow::initGUI()
     todo_collumn->setPosition(sf::Vector2f{TaskItSettings::BIG_PADDING * 3 + TaskItSettings::MEDIUM_PADDING,
          TaskItSettings::BIG_PADDING});
     todo_collumn->setIndicatorColor(TaskItColors::INDICATOR_TODO);
+    todo_collumn->setCollumnTaskState(TaskStatus::TO_DO);
 
     // Используем TaskItSizes::COLLUMN_SIZE_X вместо getGlobalBounds().size.x
     in_pg_collumn = std::make_shared<gui::KanbanCollumn>("IN PROGRESS", materials);
@@ -169,6 +187,7 @@ void MainWindow::initGUI()
         TaskItSizes::COLLUMN_SIZE_X + TaskItSettings::BIG_PADDING, 
         TaskItSettings::BIG_PADDING});
     in_pg_collumn->setIndicatorColor(TaskItColors::INDICATOR_PROGRESS);
+    in_pg_collumn->setCollumnTaskState(TaskStatus::IN_PROGRESS);
 
     done_collumn = std::make_shared<gui::KanbanCollumn>("DONE", materials);
     done_collumn->setPosition(sf::Vector2f{ 
@@ -176,6 +195,7 @@ void MainWindow::initGUI()
         (TaskItSizes::COLLUMN_SIZE_X + TaskItSettings::BIG_PADDING) * 2, 
         TaskItSettings::BIG_PADDING});
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
+    done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
     sRefreshBoard();
 
