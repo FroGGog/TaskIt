@@ -12,6 +12,11 @@ Task &TaskManager::getTaskById(int task_id)
     return m_task_storage.at(task_id);
 }
 
+void TaskManager::deleteTaskById(int task_id)
+{
+    m_task_storage.erase(task_id);
+}
+
 std::unordered_map<int, Task>& TaskManager::getAllTasks()
 {
     return m_task_storage;

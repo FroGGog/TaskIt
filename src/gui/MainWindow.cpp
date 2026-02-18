@@ -32,6 +32,10 @@ void MainWindow::initWindow(sf::VideoMode vid_mode)
 
 void MainWindow::sRefreshBoard()
 {
+    todo_collumn->getAllTasks().clear();
+    in_pg_collumn->getAllTasks().clear();
+    done_collumn->getAllTasks().clear();
+
     for(auto& i : m_manager.getAllTasks())
     {
         if(!todo_collumn->taskInColumn(i.first) && !in_pg_collumn->taskInColumn(i.first) && !done_collumn->taskInColumn(i.first))
@@ -225,7 +229,17 @@ void MainWindow::sWindowEvents()
                 tempTask.setStatus(TaskStatus::DONE);
                 sRefreshBoard();
             }
-            
+            else if(keyPressed->scancode == sf::Keyboard::Scancode::D)
+            {
+                if(m_choosed_task && m_d_key_available)
+                {
+                    m_d_key_available = false;
+                    m_manager.deleteTaskById(m_choosed_task->getIndex());
+                    m_choosed_task = nullptr;
+                    sRefreshBoard();
+                }
+                
+            }
         }
         else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
         {
@@ -241,11 +255,20 @@ void MainWindow::sWindowEvents()
             {
                 m_u_key_available = true;
             }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::D)
+            {
+                m_d_key_available = true;
+            }
         }
         else if(const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
         {
             if(mousePressed->button == sf::Mouse::Button::Left)
             {
+                if(m_hovered_task)
+                {
+                    m_choosed_task = m_hovered_task;
+                    m_choosed_task->setIsChoosen(true);
+                }
                 m_is_mouse_pressed = true;
                 m_long_press_clock.restart();
                 m_is_long_mouse_press = false;

@@ -16,6 +16,8 @@ public:
     [[nodiscard]] Task& getTaskById(int task_id);
     [[nodiscard]] std::unordered_map<int, Task>&  getAllTasks();
 
+    void deleteTaskById(int task_id);
+
     //setters
     void changeTaskStatus(int task_id, TaskStatus status);
 

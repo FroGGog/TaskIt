@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
 
 enum class TaskStatus: std::uint8_t {TO_DO, IN_PROGRESS, DONE};
 
@@ -24,10 +27,15 @@ public:
     [[nodiscard]] std::string_view getTitle() const;
     [[nodiscard]] std::string_view getDescription() const;
     [[nodiscard]] TaskStatus getStatus() const;
+    [[nodiscard]] std::string getTimeCreate() const;
 
 private:
 
     std::string m_task_title;
     std::string m_description;
     TaskStatus m_task_status = TaskStatus::TO_DO;
+
+    std::tm m_create_time{};
+
+    void setTimeCreate();
 };

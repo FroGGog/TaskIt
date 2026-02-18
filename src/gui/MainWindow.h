@@ -30,10 +30,13 @@ private:
 
     std::shared_ptr<gui::KanbanCollumn> todo_collumn, in_pg_collumn, done_collumn;
     std::shared_ptr<gui::TaskBox> m_hovered_task;
+    std::shared_ptr<gui::TaskBox> m_choosed_task;
 
     bool m_t_key_available = true;
     bool m_y_key_available = true;
     bool m_u_key_available = true;
+
+    bool m_d_key_available = true;
 
     bool m_is_mouse_pressed = false;
     bool m_is_long_mouse_press = false;

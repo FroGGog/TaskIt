@@ -38,7 +38,9 @@ std::optional<TaskStatus> stringToStatus(std::string_view str_status)
 Task::Task(std::string task_title, std::string description)
     : m_task_title(std::move(task_title)),
       m_description(std::move(description))
-    {}
+    {
+        setTimeCreate();
+    }
 
 // setters
 void Task::setTitle(std::string new_title)
@@ -70,4 +72,25 @@ std::string_view Task::getDescription() const
 TaskStatus Task::getStatus() const
 {
     return m_task_status;
+}
+
+std::string Task::getTimeCreate() const
+{
+    std::ostringstream oss;
+    oss << std::put_time(&m_create_time, "%d-%m-%Y %H:%M:%S");
+    return oss.str();
+}
+
+void Task::setTimeCreate()
+{
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
+
+    #if defined(_WIN32) || defined(_MSC_VER)
+        // Windows: localtime_s(tm*, const time_t*)
+        localtime_s(&m_create_time, &now_time_t);
+    #else
+        // POSIX: localtime_r(const time_t*, tm*)
+        localtime_r(&now_time_t, &m_create_time);
+    #endif
 }

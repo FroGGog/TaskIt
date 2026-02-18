@@ -51,8 +51,6 @@ namespace gui
 
     private:
 
-        std::string getCurrentTime();
-
         void updateTextPositions();
 
         int m_task_index;
@@ -60,8 +58,6 @@ namespace gui
         std::unique_ptr<sf::Text> m_text_title;
         std::unique_ptr<sf::Text> m_text_descr;
         std::unique_ptr<sf::Text> m_text_create_time;
-
-        std::tm m_create_time{};
 
         sf::RectangleShape m_background_shape;
 

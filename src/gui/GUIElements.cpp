@@ -37,7 +37,7 @@ gui::TaskBox::TaskBox(const Task &task, const int task_index, const UsedMaterial
     m_text_descr->setFillColor(TaskItColors::TASK_TEXT);
     
     m_text_create_time = std::make_unique<sf::Text>(*materials.global_font,
-        getCurrentTime(), 15);
+        task.getTimeCreate(), 15);
     m_text_create_time->setFillColor(TaskItColors::TASK_TEXT);
 
     updateTextPositions();
@@ -96,25 +96,6 @@ TaskStatus gui::TaskBox::getStatus() const
 bool gui::TaskBox::isChoosen() const
 {
     return m_is_choosen;
-}
-
-std::string gui::TaskBox::getCurrentTime()
-{
-    auto now = std::chrono::system_clock::now();
-    std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
-
-    #if defined(_WIN32) || defined(_MSC_VER)
-        // Windows: localtime_s(tm*, const time_t*)
-        localtime_s(&m_create_time, &now_time_t);
-    #else
-        // POSIX: localtime_r(const time_t*, tm*)
-        localtime_r(&now_time_t, &m_create_time);
-    #endif
-
-    std::ostringstream oss;
-    oss << std::put_time(&m_create_time, "%d-%m-%Y %H:%M:%S");
-    return oss.str();
-    
 }
 
 
