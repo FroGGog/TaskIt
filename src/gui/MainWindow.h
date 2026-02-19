@@ -32,6 +32,8 @@ private:
     std::shared_ptr<gui::TaskBox> m_hovered_task;
     std::shared_ptr<gui::TaskBox> m_choosed_task;
 
+    std::shared_ptr<gui::Button> m_add_task_button;
+
     bool m_t_key_available = true;
     bool m_y_key_available = true;
     bool m_u_key_available = true;

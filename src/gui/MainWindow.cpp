@@ -168,7 +168,7 @@ void MainWindow::sMoveTaskToCollumn()
     {
         m_hovered_task->setPosition(m_saved_pos);
     }
-        m_saved_pos = sf::Vector2f{0.f, 0.f};
+    m_saved_pos = sf::Vector2f{0.f, 0.f};
 
 }
 
@@ -197,11 +197,19 @@ void MainWindow::initGUI()
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
+    m_add_task_button = std::make_shared<gui::Button>("Add", materials);
+    sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
+    button_pos.x += TaskItSettings::SMALL_PADDING;
+    button_pos.y += TaskItSettings::SMALL_PADDING + 2.f;
+    m_add_task_button->setPosition(button_pos);
+
     sRefreshBoard();
 
     gui_elems.push_back(todo_collumn);
     gui_elems.push_back(in_pg_collumn);
     gui_elems.push_back(done_collumn);
+
+    gui_elems.push_back(m_add_task_button);
 
 }
 

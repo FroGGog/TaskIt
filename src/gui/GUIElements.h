@@ -4,6 +4,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+
 
 #include <string>
 #include <chrono>
@@ -104,6 +106,26 @@ namespace gui
         int m_max_task_in_collumn;
 
         void setUpLayout();
+
+    };
+
+    class Button : public GuiElement
+    {
+    public:
+
+        Button(std::string button_text, const UsedMaterials& materials);
+
+        void setPosition(sf::Vector2f pos);
+
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
+        
+        void draw(sf::RenderWindow& r_wind) const override;
+
+    private:
+
+        sf::CircleShape m_button_shape;
+
+        sf::RectangleShape m_plus_horizontal, m_plus_vertical;
 
     };
 
