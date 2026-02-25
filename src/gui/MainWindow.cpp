@@ -20,6 +20,7 @@ MainWindow::MainWindow(sf::VideoMode vid_mode)
 {
     initWindow(vid_mode);
     initGUI();
+    initDialogWindows();
 
     m_saved_pos = sf::Vector2f{0.f, 0.f};
 }
@@ -117,6 +118,11 @@ void MainWindow::sCheckHover()
                 m_hovered_task = task;
             }
         }
+        
+        if(m_add_task_button->getGlobalBounds().contains(world_pos))
+        {
+            m_hovered_button = m_add_task_button;
+        }
     }
 }
 
@@ -197,10 +203,10 @@ void MainWindow::initGUI()
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
-    m_add_task_button = std::make_shared<gui::Button>("Add", materials);
+    m_add_task_button = std::make_shared<gui::Button>();
     sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
-    button_pos.x += TaskItSettings::SMALL_PADDING;
-    button_pos.y += TaskItSettings::SMALL_PADDING + 2.f;
+    button_pos.x += todo_collumn->getGlobalBounds().size.x - m_add_task_button->getGlobalBounds().size.x - TaskItSettings::MEDIUM_PADDING;
+    button_pos.y += todo_collumn->getGlobalBounds().size.y - m_add_task_button->getGlobalBounds().size.y - TaskItSettings::MEDIUM_PADDING;
     m_add_task_button->setPosition(button_pos);
 
     sRefreshBoard();
@@ -211,6 +217,12 @@ void MainWindow::initGUI()
 
     gui_elems.push_back(m_add_task_button);
 
+}
+
+void MainWindow::initDialogWindows()
+{
+    m_dialog_win = DialogWindow();
+    
 }
 
 void MainWindow::sRender()
@@ -225,6 +237,8 @@ void MainWindow::sRender()
     in_pg_collumn->drawTasks(m_window);
     done_collumn->drawTasks(m_window);
 
+    m_dialog_win.draw(m_window);
+
     m_window.display();
 }
 
@@ -236,28 +250,7 @@ void MainWindow::sWindowEvents()
             m_window.close();
         else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
-            if (keyPressed->scancode == sf::Keyboard::Scancode::T && m_t_key_available)
-            {
-                m_t_key_available = false;
-                Task& tempTask = m_manager.addTask("Test", "Task");
-                tempTask.setStatus(TaskStatus::TO_DO);
-                sRefreshBoard();
-            }
-            else if(keyPressed->scancode == sf::Keyboard::Scancode::Y && m_y_key_available)
-            {
-                m_y_key_available = false;
-                Task& tempTask = m_manager.addTask("Test", "Task");
-                tempTask.setStatus(TaskStatus::IN_PROGRESS);
-                sRefreshBoard();
-            }
-            else if(keyPressed->scancode == sf::Keyboard::Scancode::U && m_u_key_available)
-            {
-                m_u_key_available = false;
-                Task& tempTask = m_manager.addTask("Test", "Task");
-                tempTask.setStatus(TaskStatus::DONE);
-                sRefreshBoard();
-            }
-            else if(keyPressed->scancode == sf::Keyboard::Scancode::D)
+            if(keyPressed->scancode == sf::Keyboard::Scancode::D)
             {
                 if(m_choosed_task && m_d_key_available)
                 {
@@ -266,24 +259,16 @@ void MainWindow::sWindowEvents()
                     m_choosed_task = nullptr;
                     sRefreshBoard();
                 }
-                
+            }
+            if(keyPressed->scancode == sf::Keyboard::Scancode::N)
+            {
+                m_dialog_win.setIsOpen(true);
             }
         }
         else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
         {
-            if (keyReleased->scancode == sf::Keyboard::Scancode::T)
-            {
-                m_t_key_available = true;
-            }
-            else if (keyReleased->scancode == sf::Keyboard::Scancode::Y)
-            {
-                m_y_key_available = true;
-            }
-            else if (keyReleased->scancode == sf::Keyboard::Scancode::U)
-            {
-                m_u_key_available = true;
-            }
-            else if (keyReleased->scancode == sf::Keyboard::Scancode::D)
+            
+            if (keyReleased->scancode == sf::Keyboard::Scancode::D)
             {
                 m_d_key_available = true;
             }
@@ -297,6 +282,13 @@ void MainWindow::sWindowEvents()
                     m_choosed_task = m_hovered_task;
                     m_choosed_task->setIsChoosen(true);
                 }
+                else if(m_hovered_button)
+                {
+                    Task& tempTask = m_manager.addTask("Test", "Task");
+                    tempTask.setStatus(TaskStatus::TO_DO);
+                    sRefreshBoard();
+                }
+
                 m_is_mouse_pressed = true;
                 m_long_press_clock.restart();
                 m_is_long_mouse_press = false;
@@ -315,6 +307,7 @@ void MainWindow::sWindowEvents()
                     {
                         m_hovered_task->setIsChoosen(true);
                     }
+                    
                 }
                 // release after long press
                 if(m_is_long_mouse_press)
@@ -351,6 +344,13 @@ void MainWindow::update()
         }
     }
 
+    if(m_dialog_win.isOpen())
+    {
+        sf::Vector2u win_size = m_window.getSize();
+        sf::Vector2f center(win_size.x / 2.0f, win_size.y / 2.0f);
+        m_dialog_win.setPosition(center);
+    }
+
     sMoveTasks();
 
     sRender();
@@ -359,4 +359,50 @@ void MainWindow::update()
 bool MainWindow::isOpen() const
 {
     return m_window.isOpen();
+}
+
+DialogWindow::DialogWindow()
+{
+    m_overlay.setSize(sf::Vector2f(400, 300)); // Или размер окна
+    m_overlay.setFillColor(sf::Color(0, 0, 0, 150));
+}
+
+void DialogWindow::handleEvents(const sf::Event &event)
+{
+    if (!m_isOpen) return;
+}
+
+void DialogWindow::update()
+{
+    if (!m_isOpen) return;
+}
+
+void DialogWindow::draw(sf::RenderWindow &window)
+{
+    if (!m_isOpen) return;
+
+    window.draw(m_overlay);
+}
+
+void DialogWindow::setIsOpen(bool open)
+{
+    if(m_isOpen)
+    {
+        m_isOpen = !m_isOpen;
+    }
+    else
+    {
+        m_isOpen = open;
+    }
+}
+
+void DialogWindow::setPosition(sf::Vector2f pos)
+{
+    m_overlay.setOrigin(m_overlay.getGeometricCenter());
+    m_overlay.setPosition(pos);
+}
+
+bool DialogWindow::isOpen() const
+{
+    return m_isOpen;
 }

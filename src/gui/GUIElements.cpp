@@ -245,13 +245,17 @@ void gui::KanbanCollumn::clearCollumn()
     m_task_box_in_collumn.clear();
 }
 
-gui::Button::Button(std::string button_text, const UsedMaterials &materials)
+gui::Button::Button()
 {
     m_button_shape.setRadius(10.f);
-    m_button_shape.setFillColor(sf::Color{100, 100, 220, 255});
+    m_button_shape.setFillColor(TaskItColors::COLLUMN_HEADER);
+    m_button_shape.setOutlineThickness(1.f);
+    m_button_shape.setOutlineColor(sf::Color{255, 255, 255, 30});
 
     m_plus_horizontal.setSize(sf::Vector2f{15, 3});
     m_plus_vertical.setSize(sf::Vector2f{3, 15});
+    m_plus_horizontal.setFillColor(TaskItColors::BUTTON_PLUS); 
+    m_plus_vertical.setFillColor(TaskItColors::BUTTON_PLUS);
     m_plus_horizontal.setOrigin(m_plus_horizontal.getGeometricCenter());
     m_plus_vertical.setOrigin(m_plus_vertical.getGeometricCenter());
 }
@@ -260,7 +264,6 @@ void gui::Button::setPosition(sf::Vector2f pos)
 {
     m_button_shape.setPosition(pos);
 
-    sf::Vector2f center = m_button_shape.getPosition();
     m_plus_horizontal.setPosition(m_button_shape.getGlobalBounds().getCenter());
     m_plus_vertical.setPosition(m_button_shape.getGlobalBounds().getCenter());
 }

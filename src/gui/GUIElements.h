@@ -113,7 +113,7 @@ namespace gui
     {
     public:
 
-        Button(std::string button_text, const UsedMaterials& materials);
+        Button();
 
         void setPosition(sf::Vector2f pos);
 

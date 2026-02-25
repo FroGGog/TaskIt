@@ -6,6 +6,30 @@
 #include "task_manager.h"
 #include "GUIElements.h"
 
+class DialogWindow
+{
+public:
+
+    DialogWindow();
+
+    void handleEvents(const sf::Event& event);
+
+    void update();
+    void draw(sf::RenderWindow& window);
+
+    void setIsOpen(bool open);
+    void setPosition(sf::Vector2f pos);
+
+    bool isOpen() const;
+
+private:
+
+    bool m_isOpen = false;
+
+    sf::RectangleShape m_overlay;
+};
+
+
 class MainWindow
 {
 private:
@@ -14,6 +38,7 @@ private:
 
     void initWindow(sf::VideoMode vid_mode);
     void initGUI();
+    void initDialogWindows();
 
     void sRender();
     void sWindowEvents();
@@ -23,6 +48,7 @@ private:
     void sMoveTaskToCollumn();
 
     TaskManager m_manager;
+    DialogWindow m_dialog_win;
 
     UsedMaterials materials;
 
@@ -31,12 +57,9 @@ private:
     std::shared_ptr<gui::KanbanCollumn> todo_collumn, in_pg_collumn, done_collumn;
     std::shared_ptr<gui::TaskBox> m_hovered_task;
     std::shared_ptr<gui::TaskBox> m_choosed_task;
+    std::shared_ptr<gui::Button> m_hovered_button;
 
     std::shared_ptr<gui::Button> m_add_task_button;
-
-    bool m_t_key_available = true;
-    bool m_y_key_available = true;
-    bool m_u_key_available = true;
 
     bool m_d_key_available = true;
 

@@ -27,6 +27,9 @@ namespace TaskItColors
     constexpr sf::Color TASK_HOVER_OUTLINE {255, 255, 255, 120};
 
     constexpr sf::Color TASK_TEXT {30, 30, 35, 255};
+
+    //Buttons
+    constexpr sf::Color BUTTON_PLUS {220, 160, 70, 255};
 };
 
 namespace TaskItSettings
