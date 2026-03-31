@@ -123,6 +123,10 @@ void MainWindow::sCheckHover()
         {
             m_hovered_button = m_add_task_button;
         }
+        else
+        {
+            m_hovered_button = nullptr;
+        }
     }
 }
 
@@ -186,7 +190,6 @@ void MainWindow::initGUI()
     todo_collumn->setIndicatorColor(TaskItColors::INDICATOR_TODO);
     todo_collumn->setCollumnTaskState(TaskStatus::TO_DO);
 
-    // Используем TaskItSizes::COLLUMN_SIZE_X вместо getGlobalBounds().size.x
     in_pg_collumn = std::make_shared<gui::KanbanCollumn>("IN PROGRESS", materials);
     in_pg_collumn->setPosition(sf::Vector2f{ 
         TaskItSettings::BIG_PADDING * 3 + TaskItSettings::MEDIUM_PADDING + 
@@ -203,7 +206,7 @@ void MainWindow::initGUI()
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
-    m_add_task_button = std::make_shared<gui::Button>();
+    m_add_task_button = std::make_shared<gui::CircleButton>();
     sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
     button_pos.x += todo_collumn->getGlobalBounds().size.x - m_add_task_button->getGlobalBounds().size.x - TaskItSettings::MEDIUM_PADDING;
     button_pos.y += todo_collumn->getGlobalBounds().size.y - m_add_task_button->getGlobalBounds().size.y - TaskItSettings::MEDIUM_PADDING;
@@ -319,6 +322,7 @@ void MainWindow::sWindowEvents()
                         m_hovered_task->setIsChoosen(false);
                     }
                     std::cout << "Press ended after: " << m_long_press_clock.getElapsedTime().asSeconds() << '\n';
+                    
                 }
 
 

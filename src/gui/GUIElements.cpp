@@ -245,7 +245,7 @@ void gui::KanbanCollumn::clearCollumn()
     m_task_box_in_collumn.clear();
 }
 
-gui::Button::Button()
+gui::CircleButton::CircleButton()
 {
     m_button_shape.setRadius(10.f);
     m_button_shape.setFillColor(TaskItColors::COLLUMN_HEADER);
@@ -260,12 +260,36 @@ gui::Button::Button()
     m_plus_vertical.setOrigin(m_plus_vertical.getGeometricCenter());
 }
 
-void gui::Button::setPosition(sf::Vector2f pos)
+void gui::CircleButton::setPosition(sf::Vector2f pos)
 {
     m_button_shape.setPosition(pos);
 
     m_plus_horizontal.setPosition(m_button_shape.getGlobalBounds().getCenter());
     m_plus_vertical.setPosition(m_button_shape.getGlobalBounds().getCenter());
+}
+
+sf::FloatRect gui::CircleButton::getGlobalBounds() const
+{
+    return m_button_shape.getGlobalBounds();
+}
+
+void gui::CircleButton::draw(sf::RenderWindow &r_wind) const
+{
+    r_wind.draw(m_button_shape);
+
+    r_wind.draw(m_plus_horizontal);
+    r_wind.draw(m_plus_vertical);
+}
+
+gui::Button::Button()
+{
+    m_button_shape.setSize(sf::Vector2f{200, 150});
+    m_button_shape.setFillColor((sf::Color::White));
+}
+
+void gui::Button::setPosition(sf::Vector2f pos)
+{
+    m_button_shape.setPosition(pos);
 }
 
 sf::FloatRect gui::Button::getGlobalBounds() const
@@ -276,7 +300,4 @@ sf::FloatRect gui::Button::getGlobalBounds() const
 void gui::Button::draw(sf::RenderWindow &r_wind) const
 {
     r_wind.draw(m_button_shape);
-
-    r_wind.draw(m_plus_horizontal);
-    r_wind.draw(m_plus_vertical);
 }

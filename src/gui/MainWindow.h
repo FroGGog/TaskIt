@@ -59,7 +59,7 @@ private:
     std::shared_ptr<gui::TaskBox> m_choosed_task;
     std::shared_ptr<gui::Button> m_hovered_button;
 
-    std::shared_ptr<gui::Button> m_add_task_button;
+    std::shared_ptr<gui::CircleButton> m_add_task_button;
 
     bool m_d_key_available = true;
 

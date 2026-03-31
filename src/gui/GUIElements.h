@@ -123,6 +123,24 @@ namespace gui
 
     private:
 
+        sf::RectangleShape m_button_shape;
+
+    };
+
+    class CircleButton : public Button
+    {
+    public:
+
+        CircleButton();
+
+        void setPosition(sf::Vector2f pos);
+
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
+        
+        void draw(sf::RenderWindow& r_wind) const override;
+
+    private:
+
         sf::CircleShape m_button_shape;
 
         sf::RectangleShape m_plus_horizontal, m_plus_vertical;
