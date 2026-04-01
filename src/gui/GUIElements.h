@@ -12,6 +12,7 @@
 #include <ctime>
 #include <iostream>
 #include <sstream>
+#include <functional>
 
 #include "task.h"
 #include "Settings.h"
@@ -115,7 +116,13 @@ namespace gui
 
         Button();
 
-        void setPosition(sf::Vector2f pos);
+        Button& setPosition(sf::Vector2f pos);
+        Button& setSize(sf::Vector2f size);
+        Button& setFillColor(sf::Color color);
+ 
+        virtual void setCallbackFunction(std::function<void()> callBack);
+
+        virtual void onClick();
 
         [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
         
@@ -125,6 +132,7 @@ namespace gui
 
         sf::RectangleShape m_button_shape;
 
+        std::function<void()> m_callback;
     };
 
     class CircleButton : public Button
@@ -134,6 +142,7 @@ namespace gui
         CircleButton();
 
         void setPosition(sf::Vector2f pos);
+        void setSize(double r);
 
         [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
         

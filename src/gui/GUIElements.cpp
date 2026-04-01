@@ -268,6 +268,11 @@ void gui::CircleButton::setPosition(sf::Vector2f pos)
     m_plus_vertical.setPosition(m_button_shape.getGlobalBounds().getCenter());
 }
 
+void gui::CircleButton::setSize(double r)
+{
+    // TODO: implement this, make plus bigger based on radius change
+}
+
 sf::FloatRect gui::CircleButton::getGlobalBounds() const
 {
     return m_button_shape.getGlobalBounds();
@@ -287,9 +292,32 @@ gui::Button::Button()
     m_button_shape.setFillColor((sf::Color::White));
 }
 
-void gui::Button::setPosition(sf::Vector2f pos)
+gui::Button& gui::Button::setPosition(sf::Vector2f pos)
 {
     m_button_shape.setPosition(pos);
+    return *this;
+}
+
+gui::Button& gui::Button::setSize(sf::Vector2f size)
+{
+    m_button_shape.setSize(size);
+    return *this;
+}
+
+gui::Button& gui::Button::setFillColor(sf::Color color)
+{
+    m_button_shape.setFillColor(color);
+    return *this;
+}
+
+void gui::Button::setCallbackFunction(std::function<void()> callBack)
+{
+    m_callback = callBack;
+}
+
+void gui::Button::onClick()
+{
+    m_callback();
 }
 
 sf::FloatRect gui::Button::getGlobalBounds() const

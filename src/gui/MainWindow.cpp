@@ -19,8 +19,8 @@ void MainWindow::resetClickedTask()
 MainWindow::MainWindow(sf::VideoMode vid_mode)
 {
     initWindow(vid_mode);
-    initGUI();
     initDialogWindows();
+    initGUI();
 
     m_saved_pos = sf::Vector2f{0.f, 0.f};
 }
@@ -207,6 +207,7 @@ void MainWindow::initGUI()
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
     m_add_task_button = std::make_shared<gui::CircleButton>();
+    m_add_task_button->setCallbackFunction([&](){m_dialog_win.setIsOpen(true);});
     sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
     button_pos.x += todo_collumn->getGlobalBounds().size.x - m_add_task_button->getGlobalBounds().size.x - TaskItSettings::MEDIUM_PADDING;
     button_pos.y += todo_collumn->getGlobalBounds().size.y - m_add_task_button->getGlobalBounds().size.y - TaskItSettings::MEDIUM_PADDING;
@@ -263,10 +264,6 @@ void MainWindow::sWindowEvents()
                     sRefreshBoard();
                 }
             }
-            if(keyPressed->scancode == sf::Keyboard::Scancode::N)
-            {
-                m_dialog_win.setIsOpen(true);
-            }
         }
         else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
         {
@@ -287,8 +284,7 @@ void MainWindow::sWindowEvents()
                 }
                 else if(m_hovered_button)
                 {
-                    Task& tempTask = m_manager.addTask("Test", "Task");
-                    tempTask.setStatus(TaskStatus::TO_DO);
+                    m_hovered_button->onClick();
                     sRefreshBoard();
                 }
 
@@ -369,6 +365,12 @@ DialogWindow::DialogWindow()
 {
     m_overlay.setSize(sf::Vector2f(400, 300)); // Или размер окна
     m_overlay.setFillColor(sf::Color(0, 0, 0, 150));
+
+    m_okay_button = std::make_unique<gui::Button>();
+    m_okay_button->setFillColor(sf::Color::Green);
+    m_cancel_button = std::make_unique<gui::Button>();
+    m_cancel_button->setFillColor(sf::Color::Red);
+    
 }
 
 void DialogWindow::handleEvents(const sf::Event &event)
@@ -386,6 +388,9 @@ void DialogWindow::draw(sf::RenderWindow &window)
     if (!m_isOpen) return;
 
     window.draw(m_overlay);
+
+    m_okay_button->draw(window);
+    m_cancel_button->draw(window);
 }
 
 void DialogWindow::setIsOpen(bool open)
@@ -404,6 +409,10 @@ void DialogWindow::setPosition(sf::Vector2f pos)
 {
     m_overlay.setOrigin(m_overlay.getGeometricCenter());
     m_overlay.setPosition(pos);
+
+    m_okay_button->setPosition(m_overlay.getGlobalBounds().getCenter() - sf::Vector2f{125.f , -75.f}).setSize(sf::Vector2f{75, 20});
+    m_cancel_button->setPosition(m_overlay.getGlobalBounds().getCenter() + sf::Vector2f{75.f, 75.f}).setSize(sf::Vector2f{75, 20});
+    
 }
 
 bool DialogWindow::isOpen() const

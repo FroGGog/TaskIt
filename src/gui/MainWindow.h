@@ -27,6 +27,9 @@ private:
     bool m_isOpen = false;
 
     sf::RectangleShape m_overlay;
+
+    std::unique_ptr<gui::Button> m_okay_button;
+    std::unique_ptr<gui::Button> m_cancel_button;
 };
 
 
