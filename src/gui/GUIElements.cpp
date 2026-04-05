@@ -316,6 +316,12 @@ gui::Button &gui::Button::setOutLineThickness(float value)
     return *this;
 }
 
+gui::Button &gui::Button::setOrigin(sf::Vector2f origin)
+{
+    m_button_shape.setOrigin(origin);
+    return *this;
+}
+
 void gui::Button::setCallbackFunction(std::function<void()> callBack)
 {
     m_callback = callBack;
@@ -360,4 +366,14 @@ void gui::TextField::setSize(sf::Vector2f size)
 void gui::TextField::setPosition(sf::Vector2f pos)
 {
     m_field_shape.setPosition(pos);
+}
+
+void gui::TextField::setOrigin(sf::Vector2f pos)
+{
+    m_field_shape.setOrigin(pos);
+}
+
+sf::Vector2f gui::TextField::getGeometricalCenter() const
+{
+    m_field_shape.getGeometricCenter();
 }

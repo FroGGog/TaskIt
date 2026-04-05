@@ -26,6 +26,7 @@ public:
     void setCancelButtonOnClick(std::function<void()> callBack);
 
     std::vector<std::shared_ptr<gui::Button>> getAllButton(); 
+    std::vector<std::shared_ptr<gui::TextField>> getAllFields();
 
     bool isOpen() const;
 
@@ -37,6 +38,9 @@ private:
 
     std::shared_ptr<gui::Button> m_okay_button;
     std::shared_ptr<gui::Button> m_cancel_button;
+
+    std::shared_ptr<gui::TextField> m_title_text_field;
+    std::shared_ptr<gui::TextField> m_descr_text_field;
 
 };
 
@@ -69,6 +73,7 @@ private:
     std::shared_ptr<gui::TaskBox> m_hovered_task;
     std::shared_ptr<gui::TaskBox> m_choosed_task;
     std::shared_ptr<gui::Button> m_hovered_button;
+    std::shared_ptr<gui::TextField> m_hovered_text_field, m_choosed_text_field;
 
     std::vector<std::shared_ptr<gui::Button>> m_buttons;
 
