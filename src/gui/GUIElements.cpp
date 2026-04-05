@@ -310,6 +310,12 @@ gui::Button& gui::Button::setFillColor(sf::Color color)
     return *this;
 }
 
+gui::Button &gui::Button::setOutLineThickness(float value)
+{
+    m_button_shape.setOutlineThickness(value);
+    return *this;
+}
+
 void gui::Button::setCallbackFunction(std::function<void()> callBack)
 {
     m_callback = callBack;
@@ -328,4 +334,30 @@ sf::FloatRect gui::Button::getGlobalBounds() const
 void gui::Button::draw(sf::RenderWindow &r_wind) const
 {
     r_wind.draw(m_button_shape);
+}
+
+gui::TextField::TextField(sf::Vector2f pos, sf::Vector2f size)
+{
+    m_field_shape.setPosition(pos);
+    m_field_shape.setSize(size);
+}
+
+void gui::TextField::draw(sf::RenderWindow &r_wind) const
+{
+    r_wind.draw(m_field_shape);
+}
+
+sf::FloatRect gui::TextField::getGlobalBounds() const
+{
+    return m_field_shape.getGlobalBounds();
+}
+
+void gui::TextField::setSize(sf::Vector2f size)
+{
+    m_field_shape.setSize(size);
+}
+
+void gui::TextField::setPosition(sf::Vector2f pos)
+{
+    m_field_shape.setPosition(pos);
 }

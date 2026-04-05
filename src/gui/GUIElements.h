@@ -119,6 +119,7 @@ namespace gui
         Button& setPosition(sf::Vector2f pos);
         Button& setSize(sf::Vector2f size);
         Button& setFillColor(sf::Color color);
+        Button& setOutLineThickness(float value);
  
         virtual void setCallbackFunction(std::function<void()> callBack);
 
@@ -156,5 +157,21 @@ namespace gui
 
     };
 
+    class TextField : public GuiElement
+    {
+    public:
+
+        TextField() = default;
+        TextField(sf::Vector2f pos, sf::Vector2f size);
+
+        void draw(sf::RenderWindow& r_wind) const override;
+        [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
+
+        void setSize(sf::Vector2f size);
+        void setPosition(sf::Vector2f pos);
+
+    private:
+        sf::RectangleShape m_field_shape;
+    };
 }
 

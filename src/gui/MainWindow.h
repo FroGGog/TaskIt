@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <string>
+#include <functional>
 
 #include "task_manager.h"
 #include "GUIElements.h"
@@ -19,6 +20,12 @@ public:
 
     void setIsOpen(bool open);
     void setPosition(sf::Vector2f pos);
+    void setOutLineThickness(float value);
+
+    void setOkayButtonOnClick(std::function<void()> callBack);
+    void setCancelButtonOnClick(std::function<void()> callBack);
+
+    std::vector<std::shared_ptr<gui::Button>> getAllButton(); 
 
     bool isOpen() const;
 
@@ -28,8 +35,9 @@ private:
 
     sf::RectangleShape m_overlay;
 
-    std::unique_ptr<gui::Button> m_okay_button;
-    std::unique_ptr<gui::Button> m_cancel_button;
+    std::shared_ptr<gui::Button> m_okay_button;
+    std::shared_ptr<gui::Button> m_cancel_button;
+
 };
 
 
@@ -62,7 +70,7 @@ private:
     std::shared_ptr<gui::TaskBox> m_choosed_task;
     std::shared_ptr<gui::Button> m_hovered_button;
 
-    std::shared_ptr<gui::CircleButton> m_add_task_button;
+    std::vector<std::shared_ptr<gui::Button>> m_buttons;
 
     bool m_d_key_available = true;
 

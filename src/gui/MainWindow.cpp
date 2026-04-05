@@ -118,16 +118,18 @@ void MainWindow::sCheckHover()
                 m_hovered_task = task;
             }
         }
-        
-        if(m_add_task_button->getGlobalBounds().contains(world_pos))
+    }
+
+    m_hovered_button = nullptr;
+    for(const auto& button : m_buttons)
+    {
+        if(button->getGlobalBounds().contains(world_pos))
         {
-            m_hovered_button = m_add_task_button;
-        }
-        else
-        {
-            m_hovered_button = nullptr;
+            m_hovered_button = button;
         }
     }
+
+
 }
 
 void MainWindow::sMoveTasks()
@@ -206,8 +208,10 @@ void MainWindow::initGUI()
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
-    m_add_task_button = std::make_shared<gui::CircleButton>();
+    auto m_add_task_button = std::make_shared<gui::CircleButton>();
     m_add_task_button->setCallbackFunction([&](){m_dialog_win.setIsOpen(true);});
+    m_buttons.push_back((m_add_task_button));
+
     sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
     button_pos.x += todo_collumn->getGlobalBounds().size.x - m_add_task_button->getGlobalBounds().size.x - TaskItSettings::MEDIUM_PADDING;
     button_pos.y += todo_collumn->getGlobalBounds().size.y - m_add_task_button->getGlobalBounds().size.y - TaskItSettings::MEDIUM_PADDING;
@@ -226,7 +230,15 @@ void MainWindow::initGUI()
 void MainWindow::initDialogWindows()
 {
     m_dialog_win = DialogWindow();
-    
+    m_dialog_win.setCancelButtonOnClick([&](){m_dialog_win.setIsOpen(true);});
+    m_dialog_win.setOkayButtonOnClick([&](){m_dialog_win.setIsOpen(true);});
+    m_dialog_win.setOutLineThickness(1.f);
+
+    for(auto button : m_dialog_win.getAllButton())
+    {
+        m_buttons.push_back(std::move(button));
+    }
+
 }
 
 void MainWindow::sRender()
@@ -284,8 +296,8 @@ void MainWindow::sWindowEvents()
                 }
                 else if(m_hovered_button)
                 {
+                    std::cout << "Pressed button\n";
                     m_hovered_button->onClick();
-                    sRefreshBoard();
                 }
 
                 m_is_mouse_pressed = true;
@@ -363,13 +375,14 @@ bool MainWindow::isOpen() const
 
 DialogWindow::DialogWindow()
 {
-    m_overlay.setSize(sf::Vector2f(400, 300)); // Или размер окна
+    m_overlay.setSize(sf::Vector2f(400, 300));
     m_overlay.setFillColor(sf::Color(0, 0, 0, 150));
 
     m_okay_button = std::make_unique<gui::Button>();
-    m_okay_button->setFillColor(sf::Color::Green);
+    m_okay_button->setFillColor(TaskItColors::BUTTON_OKEY).setOutLineThickness(1.5f);
+
     m_cancel_button = std::make_unique<gui::Button>();
-    m_cancel_button->setFillColor(sf::Color::Red);
+    m_cancel_button->setFillColor(TaskItColors::BUTTON_CANCEL).setOutLineThickness(1.5f);
     
 }
 
@@ -413,6 +426,26 @@ void DialogWindow::setPosition(sf::Vector2f pos)
     m_okay_button->setPosition(m_overlay.getGlobalBounds().getCenter() - sf::Vector2f{125.f , -75.f}).setSize(sf::Vector2f{75, 20});
     m_cancel_button->setPosition(m_overlay.getGlobalBounds().getCenter() + sf::Vector2f{75.f, 75.f}).setSize(sf::Vector2f{75, 20});
     
+}
+
+void DialogWindow::setOutLineThickness(float value)
+{
+    m_overlay.setOutlineThickness(value);
+}
+
+void DialogWindow::setOkayButtonOnClick(std::function<void()> callBack)
+{
+    m_okay_button->setCallbackFunction(callBack);
+}
+
+void DialogWindow::setCancelButtonOnClick(std::function<void()> callBack)
+{
+    m_cancel_button->setCallbackFunction(callBack);
+}
+
+std::vector<std::shared_ptr<gui::Button>> DialogWindow::getAllButton()
+{
+    return {m_okay_button, m_cancel_button};
 }
 
 bool DialogWindow::isOpen() const

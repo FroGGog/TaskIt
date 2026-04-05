@@ -30,6 +30,8 @@ namespace TaskItColors
 
     //Buttons
     constexpr sf::Color BUTTON_PLUS {220, 160, 70, 255};
+    constexpr sf::Color BUTTON_OKEY {100, 180, 140, 255};
+    constexpr sf::Color BUTTON_CANCEL {200, 100, 100, 255};
 };
 
 namespace TaskItSettings
