@@ -131,9 +131,9 @@ void MainWindow::sCheckHover()
     }
 
     m_hovered_text_field = nullptr;
-    if(m_dialog_win.isOpen())
+    if(m_dialog_win->isOpen())
     {
-        for(const auto& field : m_dialog_win.getAllFields())
+        for(const auto& field : m_dialog_win->getAllFields())
         {
             if(field->getGlobalBounds().contains(world_pos))
             {
@@ -224,8 +224,8 @@ void MainWindow::initGUI()
     done_collumn->setIndicatorColor(TaskItColors::INDICATOR_DONE);
     done_collumn->setCollumnTaskState(TaskStatus::DONE);
 
-    auto m_add_task_button = std::make_shared<gui::CircleButton>();
-    m_add_task_button->setCallbackFunction([&](){m_dialog_win.setIsOpen(true);});
+    auto m_add_task_button = std::make_shared<gui::CircleButton>(materials);
+    m_add_task_button->setCallbackFunction([&](){m_dialog_win->setIsOpen(true);});
     m_buttons.push_back((m_add_task_button));
 
     sf::Vector2f button_pos = todo_collumn->getGlobalBounds().position;
@@ -245,12 +245,12 @@ void MainWindow::initGUI()
 
 void MainWindow::initDialogWindows()
 {
-    m_dialog_win = DialogWindow();
-    m_dialog_win.setCancelButtonOnClick([&](){m_dialog_win.setIsOpen(true);});
-    m_dialog_win.setOkayButtonOnClick([&](){m_dialog_win.setIsOpen(true);});
-    m_dialog_win.setOutLineThickness(1.f);
+    m_dialog_win = std::make_unique<DialogWindow>(materials);
+    m_dialog_win->setCancelButtonOnClick([&](){m_dialog_win->setIsOpen(true);});
+    m_dialog_win->setOkayButtonOnClick([&](){m_dialog_win->setIsOpen(true);});
+    m_dialog_win->setOutLineThickness(1.f);
 
-    for(auto button : m_dialog_win.getAllButton())
+    for(auto button : m_dialog_win->getAllButton())
     {
         m_buttons.push_back(std::move(button));
     }
@@ -269,7 +269,7 @@ void MainWindow::sRender()
     in_pg_collumn->drawTasks(m_window);
     done_collumn->drawTasks(m_window);
 
-    m_dialog_win.draw(m_window);
+    m_dialog_win->draw(m_window);
 
     m_window.display();
 }
@@ -316,9 +316,9 @@ void MainWindow::sWindowEvents()
                     m_hovered_button->onClick();
                     sf::Vector2u win_size = m_window.getSize();
                     sf::Vector2f center(win_size.x / 2.0f, win_size.y / 2.0f);
-                    m_dialog_win.setPosition(center);
+                    m_dialog_win->setPosition(center);
                 }
-                else if(m_hovered_text_field && m_dialog_win.isOpen())
+                else if(m_hovered_text_field && m_dialog_win->isOpen())
                 {
                     std::cout << "Field pressed\n";
                     m_choosed_text_field = m_hovered_text_field;
@@ -390,21 +390,21 @@ bool MainWindow::isOpen() const
     return m_window.isOpen();
 }
 
-DialogWindow::DialogWindow()
+DialogWindow::DialogWindow(const UsedMaterials& materials)
 {
     m_overlay.setSize(sf::Vector2f(400, 300));
     m_overlay.setFillColor(sf::Color(0, 0, 0, 150));
 
-    m_okay_button = std::make_shared<gui::Button>();
+    m_okay_button = std::make_shared<gui::Button>(materials);
     m_okay_button->setFillColor(TaskItColors::BUTTON_OKEY).setOutLineThickness(1.5f);
 
-    m_cancel_button = std::make_shared<gui::Button>();
+    m_cancel_button = std::make_shared<gui::Button>(materials);
     m_cancel_button->setFillColor(TaskItColors::BUTTON_CANCEL).setOutLineThickness(1.5f);
     
-    m_title_text_field = std::make_shared<gui::TextField>();
+    m_title_text_field = std::make_shared<gui::TextField>(materials.global_font);
     m_title_text_field->setSize(sf::Vector2f{300, 25});
 
-    m_descr_text_field = std::make_shared<gui::TextField>();
+    m_descr_text_field = std::make_shared<gui::TextField>(materials.global_font);
     m_descr_text_field->setSize(sf::Vector2f{300, 25});
 }
 
@@ -456,6 +456,28 @@ void DialogWindow::setPosition(sf::Vector2f pos)
 
     m_okay_button->setPosition(m_overlay.getGlobalBounds().getCenter() + sf::Vector2f{-95.f , 100.f});
     m_cancel_button->setPosition(m_overlay.getGlobalBounds().getCenter() + sf::Vector2f{95.f, 100.f});
+
+    auto okay_button_text = m_okay_button->getText();
+    auto cancel_button_text = m_cancel_button->getText();
+
+
+    static bool text_initialized = false;
+    if(!text_initialized)
+    {
+        okay_button_text->setString("Okay");
+        cancel_button_text->setString("Cancel");
+
+        okay_button_text->setCharacterSize(14);
+        cancel_button_text->setCharacterSize(14);
+
+         okay_button_text->setOrigin(okay_button_text->getGlobalBounds().getCenter());
+        cancel_button_text->setOrigin(cancel_button_text->getGlobalBounds().getCenter());
+
+        text_initialized = true;
+    }
+
+    okay_button_text->setPosition(m_okay_button->getGlobalBounds().getCenter());
+    cancel_button_text->setPosition(m_cancel_button->getGlobalBounds().getCenter());
     
     m_title_text_field->setOrigin(m_title_text_field->getGlobalBounds().getCenter());
     m_title_text_field->setPosition(m_overlay.getGlobalBounds().getCenter() - sf::Vector2f{0.f, 85.f});

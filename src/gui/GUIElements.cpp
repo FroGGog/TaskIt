@@ -245,7 +245,8 @@ void gui::KanbanCollumn::clearCollumn()
     m_task_box_in_collumn.clear();
 }
 
-gui::CircleButton::CircleButton()
+gui::CircleButton::CircleButton(const UsedMaterials& materials)
+    : Button(materials)
 {
     m_button_shape.setRadius(10.f);
     m_button_shape.setFillColor(TaskItColors::COLLUMN_HEADER);
@@ -286,8 +287,10 @@ void gui::CircleButton::draw(sf::RenderWindow &r_wind) const
     r_wind.draw(m_plus_vertical);
 }
 
-gui::Button::Button()
+gui::Button::Button(const UsedMaterials& materials )
 {
+    m_title_text = std::make_shared<sf::Text>(*materials.global_font);
+
     m_button_shape.setSize(sf::Vector2f{200, 150});
     m_button_shape.setFillColor((sf::Color::White));
 }
@@ -337,13 +340,26 @@ sf::FloatRect gui::Button::getGlobalBounds() const
     return m_button_shape.getGlobalBounds();
 }
 
+std::shared_ptr<sf::Text> gui::Button::getText()
+{
+    return m_title_text;
+}
+
 void gui::Button::draw(sf::RenderWindow &r_wind) const
 {
     r_wind.draw(m_button_shape);
+    r_wind.draw(*m_title_text);
 }
 
-gui::TextField::TextField(sf::Vector2f pos, sf::Vector2f size)
+gui::TextField::TextField(std::shared_ptr<sf::Font> font)
 {
+    m_field_text = std::make_shared<sf::Text>(*font);
+}
+
+gui::TextField::TextField(sf::Vector2f pos, sf::Vector2f size, std::shared_ptr<sf::Font> font)
+{
+    m_field_text = std::make_shared<sf::Text>(*font);
+
     m_field_shape.setPosition(pos);
     m_field_shape.setSize(size);
 }

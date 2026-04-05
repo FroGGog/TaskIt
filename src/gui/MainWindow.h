@@ -11,7 +11,7 @@ class DialogWindow
 {
 public:
 
-    DialogWindow();
+    DialogWindow(const UsedMaterials& materials);
 
     void handleEvents(const sf::Event& event);
 
@@ -63,7 +63,7 @@ private:
     void sMoveTaskToCollumn();
 
     TaskManager m_manager;
-    DialogWindow m_dialog_win;
+    std::unique_ptr<DialogWindow> m_dialog_win;
 
     UsedMaterials materials;
 

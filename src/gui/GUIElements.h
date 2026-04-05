@@ -114,7 +114,7 @@ namespace gui
     {
     public:
 
-        Button();
+        Button(const UsedMaterials& materials);
 
         Button& setPosition(sf::Vector2f pos);
         Button& setSize(sf::Vector2f size);
@@ -127,6 +127,7 @@ namespace gui
         virtual void onClick();
 
         [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
+        [[nodiscard]] std::shared_ptr<sf::Text> getText();
         
         void draw(sf::RenderWindow& r_wind) const override;
 
@@ -135,13 +136,15 @@ namespace gui
         sf::RectangleShape m_button_shape;
 
         std::function<void()> m_callback;
+
+        std::shared_ptr<sf::Text> m_title_text;
     };
 
     class CircleButton : public Button
     {
     public:
 
-        CircleButton();
+        CircleButton(const UsedMaterials& materials);
 
         void setPosition(sf::Vector2f pos);
         void setSize(double r);
@@ -162,8 +165,8 @@ namespace gui
     {
     public:
 
-        TextField() = default;
-        TextField(sf::Vector2f pos, sf::Vector2f size);
+        TextField(std::shared_ptr<sf::Font> font);
+        TextField(sf::Vector2f pos, sf::Vector2f size, std::shared_ptr<sf::Font> font);
 
         void draw(sf::RenderWindow& r_wind) const override;
         [[nodiscard]] sf::FloatRect getGlobalBounds() const override;
@@ -176,6 +179,8 @@ namespace gui
 
     private:
         sf::RectangleShape m_field_shape;
+
+        std::shared_ptr<sf::Text> m_field_text;
     };
 }
 
