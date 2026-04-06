@@ -27,6 +27,7 @@ public:
 
     std::vector<std::shared_ptr<gui::Button>> getAllButton(); 
     std::vector<std::shared_ptr<gui::TextField>> getAllFields();
+    std::pair<std::string, std::string> getAddTaskInfo();
 
     bool isOpen() const;
 
@@ -41,6 +42,9 @@ private:
 
     std::shared_ptr<gui::TextField> m_title_text_field;
     std::shared_ptr<gui::TextField> m_descr_text_field;
+
+    std::unique_ptr<sf::Text> m_title;
+    std::unique_ptr<sf::Text> m_description;
 
 };
 

@@ -353,12 +353,16 @@ void gui::Button::draw(sf::RenderWindow &r_wind) const
 
 gui::TextField::TextField(std::shared_ptr<sf::Font> font)
 {
-    m_field_text = std::make_shared<sf::Text>(*font);
+    m_text_field_text = std::make_shared<sf::Text>(*font);
+    m_text_field_text->setCharacterSize(12);
+    m_text_field_text->setFillColor(sf::Color::Black);
 }
 
 gui::TextField::TextField(sf::Vector2f pos, sf::Vector2f size, std::shared_ptr<sf::Font> font)
 {
-    m_field_text = std::make_shared<sf::Text>(*font);
+    m_text_field_text = std::make_shared<sf::Text>(*font);
+    m_text_field_text->setCharacterSize(12);
+    m_text_field_text->setFillColor(sf::Color::Black);
 
     m_field_shape.setPosition(pos);
     m_field_shape.setSize(size);
@@ -367,6 +371,8 @@ gui::TextField::TextField(sf::Vector2f pos, sf::Vector2f size, std::shared_ptr<s
 void gui::TextField::draw(sf::RenderWindow &r_wind) const
 {
     r_wind.draw(m_field_shape);
+
+    r_wind.draw(*m_text_field_text);
 }
 
 sf::FloatRect gui::TextField::getGlobalBounds() const
@@ -392,4 +398,64 @@ void gui::TextField::setOrigin(sf::Vector2f pos)
 sf::Vector2f gui::TextField::getGeometricalCenter() const
 {
     m_field_shape.getGeometricCenter();
+}
+
+std::string gui::TextField::getText() const
+{
+    return m_text;
+}
+
+void gui::TextField::handleInput(char32_t unicode)
+{
+    // TODO: set limit to field char amount
+    if (unicode < 32 || unicode > 126)
+    {
+        return;
+    }
+
+    m_text += static_cast<char>(unicode);
+    updateDisplayText();
+}
+
+void gui::TextField::handleDelete()
+{
+    if(!m_text.empty())
+    {
+        m_text.pop_back();
+        updateDisplayText();
+    }
+    
+}
+
+void gui::TextField::handleChoosed()
+{
+    // TODO: change outline color
+    if(m_is_choosed)
+    {
+        m_field_shape.setOutlineThickness(0.f);
+        m_is_choosed = false;
+    }
+    else
+    {
+        m_field_shape.setOutlineThickness(1.5f);
+        m_field_shape.setOutlineColor(sf::Color::Magenta);
+        m_is_choosed = true;
+    }
+    
+}
+
+void gui::TextField::resetField()
+{
+    m_text.clear();
+    m_text_field_text->setString(m_text);
+
+    m_is_choosed = true;
+    handleChoosed();
+}
+
+void gui::TextField::updateDisplayText()
+{
+    m_text_field_text->setString(m_text);
+    
+    m_text_field_text->setPosition(m_field_shape.getGlobalBounds().position + sf::Vector2f{5.f , 5.f});
 }

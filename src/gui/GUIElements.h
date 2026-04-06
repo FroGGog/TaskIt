@@ -176,11 +176,24 @@ namespace gui
         void setOrigin(sf::Vector2f pos);
 
         sf::Vector2f getGeometricalCenter() const;
+        std::string getText() const;
+
+        void handleInput(char32_t unicode);
+        void handleDelete();
+        void handleChoosed();
+
+        void resetField();
 
     private:
         sf::RectangleShape m_field_shape;
 
-        std::shared_ptr<sf::Text> m_field_text;
+        std::shared_ptr<sf::Text> m_text_field_text;
+
+        std::string m_text;
+
+        bool m_is_choosed = false;
+
+        void updateDisplayText();
     };
 }
 

@@ -246,8 +246,16 @@ void MainWindow::initGUI()
 void MainWindow::initDialogWindows()
 {
     m_dialog_win = std::make_unique<DialogWindow>(materials);
-    m_dialog_win->setCancelButtonOnClick([&](){m_dialog_win->setIsOpen(true);});
-    m_dialog_win->setOkayButtonOnClick([&](){m_dialog_win->setIsOpen(true);});
+
+    m_dialog_win->setOkayButtonOnClick([&]()
+    {
+        auto info = m_dialog_win->getAddTaskInfo();
+        m_manager.addTask(info.first, info.second);
+        m_dialog_win->setIsOpen(true);
+        sRefreshBoard();
+    });
+
+    m_dialog_win->setCancelButtonOnClick([&](){m_dialog_win->setIsOpen(true); });
     m_dialog_win->setOutLineThickness(1.f);
 
     for(auto button : m_dialog_win->getAllButton())
@@ -284,12 +292,19 @@ void MainWindow::sWindowEvents()
         {
             if(keyPressed->scancode == sf::Keyboard::Scancode::D)
             {
-                if(m_choosed_task && m_d_key_available)
+                if(m_choosed_task && m_d_key_available && !m_dialog_win->isOpen())
                 {
                     m_d_key_available = false;
                     m_manager.deleteTaskById(m_choosed_task->getIndex());
                     m_choosed_task = nullptr;
                     sRefreshBoard();
+                }
+            }
+            if(keyPressed->scancode == sf::Keyboard::Scancode::Backspace)
+            {
+                if(m_dialog_win->isOpen() && m_choosed_text_field)
+                {
+                    m_choosed_text_field->handleDelete();
                 }
             }
         }
@@ -301,18 +316,30 @@ void MainWindow::sWindowEvents()
                 m_d_key_available = true;
             }
         }
+        else if(const auto* textEntered = event->getIf<sf::Event::TextEntered>())
+        {
+            if(m_choosed_text_field && m_dialog_win->isOpen())
+            {
+                m_choosed_text_field->handleInput(textEntered->unicode);
+            }
+        }
+
+
         else if(const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
         {
             if(mousePressed->button == sf::Mouse::Button::Left)
             {
                 if(m_hovered_task)
                 {
+                    m_choosed_text_field = nullptr;
                     m_choosed_task = m_hovered_task;
                     m_choosed_task->setIsChoosen(true);
                 }
                 else if(m_hovered_button)
                 {
                     std::cout << "Pressed button\n";
+                    m_choosed_text_field = nullptr;
+
                     m_hovered_button->onClick();
                     sf::Vector2u win_size = m_window.getSize();
                     sf::Vector2f center(win_size.x / 2.0f, win_size.y / 2.0f);
@@ -321,7 +348,19 @@ void MainWindow::sWindowEvents()
                 else if(m_hovered_text_field && m_dialog_win->isOpen())
                 {
                     std::cout << "Field pressed\n";
+                    //reset previous
+                    if(m_choosed_text_field)
+                    {
+                        m_choosed_text_field->handleChoosed();
+                    }
+                    //handle new one
                     m_choosed_text_field = m_hovered_text_field;
+                    m_choosed_text_field->handleChoosed();
+                }
+                else
+                {
+                    m_choosed_task = nullptr;
+                    m_choosed_text_field = nullptr;
                 }
 
                 m_is_mouse_pressed = true;
@@ -406,6 +445,14 @@ DialogWindow::DialogWindow(const UsedMaterials& materials)
 
     m_descr_text_field = std::make_shared<gui::TextField>(materials.global_font);
     m_descr_text_field->setSize(sf::Vector2f{300, 25});
+
+    m_title = std::make_unique<sf::Text>(*materials.global_font);
+    m_title->setString("Title:");
+    m_title->setCharacterSize(14);
+
+    m_description = std::make_unique<sf::Text>(*materials.global_font);
+    m_description->setString("Description:");
+    m_description->setCharacterSize(14);
 }
 
 void DialogWindow::handleEvents(const sf::Event &event)
@@ -429,6 +476,9 @@ void DialogWindow::draw(sf::RenderWindow &window)
 
     m_title_text_field->draw(window);
     m_descr_text_field->draw(window);
+
+    window.draw(*m_title);
+    window.draw(*m_description);
 }
 
 void DialogWindow::setIsOpen(bool open)
@@ -436,6 +486,9 @@ void DialogWindow::setIsOpen(bool open)
     if(m_isOpen)
     {
         m_isOpen = !m_isOpen;
+        m_title_text_field->resetField();
+        m_descr_text_field->resetField();
+
     }
     else
     {
@@ -470,7 +523,7 @@ void DialogWindow::setPosition(sf::Vector2f pos)
         okay_button_text->setCharacterSize(14);
         cancel_button_text->setCharacterSize(14);
 
-         okay_button_text->setOrigin(okay_button_text->getGlobalBounds().getCenter());
+        okay_button_text->setOrigin(okay_button_text->getGlobalBounds().getCenter());
         cancel_button_text->setOrigin(cancel_button_text->getGlobalBounds().getCenter());
 
         text_initialized = true;
@@ -484,6 +537,9 @@ void DialogWindow::setPosition(sf::Vector2f pos)
 
     m_descr_text_field->setOrigin(m_descr_text_field->getGlobalBounds().getCenter());
     m_descr_text_field->setPosition(m_overlay.getGlobalBounds().getCenter() - sf::Vector2f{0.f, 25.f});
+
+    m_title->setPosition(m_title_text_field->getGlobalBounds().position - sf::Vector2f{0.f, 25.f});
+    m_description->setPosition(m_descr_text_field->getGlobalBounds().position - sf::Vector2f{0.f, 25.f});
     
 }
 
@@ -510,6 +566,11 @@ std::vector<std::shared_ptr<gui::Button>> DialogWindow::getAllButton()
 std::vector<std::shared_ptr<gui::TextField>> DialogWindow::getAllFields()
 {
     return {m_title_text_field, m_descr_text_field};
+}
+
+std::pair<std::string, std::string> DialogWindow::getAddTaskInfo()
+{
+    return {m_title_text_field->getText(), m_descr_text_field->getText()};
 }
 
 bool DialogWindow::isOpen() const
