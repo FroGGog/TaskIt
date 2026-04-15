@@ -437,8 +437,8 @@ void gui::TextField::handleChoosed()
     }
     else
     {
-        m_field_shape.setOutlineThickness(1.5f);
-        m_field_shape.setOutlineColor(sf::Color::Magenta);
+        m_field_shape.setOutlineThickness(1.1f);
+        m_field_shape.setOutlineColor(TaskItColors::INDICATOR_TODO);
         m_is_choosed = true;
     }
     
