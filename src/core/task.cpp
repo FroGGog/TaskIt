@@ -5,11 +5,11 @@ std::optional<std::string> statusToString(TaskStatus status)
     switch (status)
     {
     case TaskStatus::TO_DO:
-        return "To Do";
+        return "todo";
     case TaskStatus::IN_PROGRESS:
-        return "In Progress";
+        return "progress";
     case TaskStatus::DONE:
-        return "Done";
+        return "done";
     default:
         return std::nullopt;
     }

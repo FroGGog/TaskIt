@@ -10,4 +10,7 @@ int main()
     {
         win.update();
     }
+    std::cout << "Saving tasks..." << std::endl;
+    win.save();
+    std::cout << "Save completed" << std::endl;
 }

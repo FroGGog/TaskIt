@@ -17,12 +17,14 @@ void MainWindow::resetClickedTask()
 }
 
 MainWindow::MainWindow(sf::VideoMode vid_mode)
+    : m_manager()
 {
     initWindow(vid_mode);
     initDialogWindows();
     initGUI();
 
     m_saved_pos = sf::Vector2f{0.f, 0.f};
+    sRefreshBoard();
 }
 
 void MainWindow::initWindow(sf::VideoMode vid_mode)
@@ -427,6 +429,11 @@ void MainWindow::update()
 bool MainWindow::isOpen() const
 {
     return m_window.isOpen();
+}
+
+void MainWindow::save()
+{
+    m_manager.saveTasks();
 }
 
 DialogWindow::DialogWindow(const UsedMaterials& materials)

@@ -26,3 +26,10 @@ add_custom_command(TARGET TaskItGUI POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:TaskItGUI>
     COMMENT "Copying font file to output directory"
 )
+
+add_custom_command(TARGET TaskItGUI POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/src/data
+        $<TARGET_FILE_DIR:TaskItGUI>/src/data
+    COMMENT "Copying data directory to build directory"
+)

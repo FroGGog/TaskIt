@@ -2,13 +2,16 @@
 
 #include <unordered_map>
 #include <iostream>
+#include <filesystem>
+#include <fstream>
 
 #include "task.h"
+#include "../lib/json.hpp"
 
 class TaskManager
 {
 public:
-    TaskManager() = default;
+    TaskManager();
 
     Task& addTask(const std::string& title, const std::string& description = " ");
 
@@ -20,6 +23,11 @@ public:
 
     //setters
     void changeTaskStatus(int task_id, TaskStatus status);
+
+    // json stuff
+    void loadTasks();
+    void saveTasks();
+
 
     void printAllTasks() const;
     void printTaskById(int task_id) const;

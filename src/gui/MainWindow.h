@@ -95,4 +95,5 @@ public:
 
     void update();
     bool isOpen() const;
+    void save();
 };
